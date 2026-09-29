@@ -227,7 +227,7 @@ Create a simple mechanic with strong audiovisual identity.
 - [x] Detection feedback.
 - [x] Tiny camera response.
 - [x] Implement without shaders first.
-- [ ] Consider shader enhancement later.
+- [x] Consider shader enhancement later.
 
 ---
 
