@@ -13,6 +13,7 @@ const COOLDOWN = 1.35;
 export class SonarSystem {
   private readonly wave: Phaser.GameObjects.Graphics;
   private readonly originFlash: Phaser.GameObjects.Arc;
+  private readonly echoGlow: Phaser.GameObjects.Arc;
   private readonly targets: SonarTarget[];
   private active = false;
   private age = 0;
@@ -29,6 +30,14 @@ export class SonarSystem {
       .setDepth(39)
       .setVisible(false);
     this.originFlash.setBlendMode(Phaser.BlendModes.ADD);
+
+    // A large additive disc creates a cheap post-process-like bloom around the
+    // expanding ping. It works on WebGL and Canvas, so mobile keeps a fallback.
+    this.echoGlow = scene.add
+      .circle(0, 0, 1, 0x65e8e3, 0)
+      .setDepth(38)
+      .setVisible(false);
+    this.echoGlow.setBlendMode(Phaser.BlendModes.ADD);
 
     this.targets = [
       this.createTarget(scene, 955, 430),
@@ -56,6 +65,12 @@ export class SonarSystem {
       .setPosition(x, y)
       .setScale(0.7)
       .setAlpha(0.7)
+      .setVisible(true);
+
+    this.echoGlow
+      .setPosition(x, y)
+      .setScale(1)
+      .setAlpha(0.11)
       .setVisible(true);
 
     return true;
@@ -99,12 +114,17 @@ export class SonarSystem {
       .setScale(0.7 + flashProgress * 2.2)
       .setAlpha((1 - flashProgress) * 0.65);
 
+    this.echoGlow
+      .setScale(Math.max(1, radius))
+      .setAlpha((1 - progress) * 0.055);
+
     this.revealReachedTargets(radius);
 
     if (progress >= 1) {
       this.active = false;
       this.wave.clear();
       this.originFlash.setVisible(false);
+      this.echoGlow.setVisible(false);
     }
   }
 
