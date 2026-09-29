@@ -201,12 +201,12 @@ A still screenshot already reads as retro-modern underwater exploration.
 - [x] Semi-transparent cone.
 - [ ] Slight delayed follow.
 - [x] Tiny beam movement.
-- [ ] Depth-dependent intensity.
+- [x] Depth-dependent intensity.
 - [x] Lamp halo.
 - [x] Very subtle flicker.
 - [x] Additive blend test.
 - [ ] Darkness mask / RenderTexture test.
-- [ ] Simple scenery occlusion if worthwhile.
+- [x] Simple scenery occlusion if worthwhile.
 - [ ] Particles visible inside the beam.
 
 ---
@@ -282,7 +282,7 @@ Create a normalized depth value from 0.0 near the surface to 1.0 at maximum dept
 - [ ] Remove warm colors progressively.
 - [x] Increase haze.
 - [x] Reduce visibility.
-- [ ] Increase importance of the headlight.
+- [x] Increase importance of the headlight.
 - [ ] Change particle density.
 
 ## Audio
