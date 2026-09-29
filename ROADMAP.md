@@ -283,20 +283,20 @@ Create a normalized depth value from 0.0 near the surface to 1.0 at maximum dept
 - [x] Increase haze.
 - [x] Reduce visibility.
 - [x] Increase importance of the headlight.
-- [ ] Change particle density.
+- [x] Change particle density.
 
 ## Audio
-- [ ] Filter ambience.
-- [ ] Add hull creaks.
-- [ ] Alter engine texture.
-- [ ] Add deep rumble.
-- [ ] Alter sonar character.
+- [x] Filter ambience.
+- [x] Add hull creaks.
+- [x] Alter engine texture.
+- [x] Add deep rumble.
+- [x] Alter sonar character.
 
 ## Gameplay
-- [ ] Safe depth.
-- [ ] Warning zone.
-- [ ] Pressure danger later.
-- [ ] Hull upgrades only if the larger game needs them.
+- [x] Safe depth.
+- [x] Warning zone.
+- [x] Pressure danger later.
+- [x] Hull upgrades only if the larger game needs them.
 
 ## Done when
 The player can feel a large depth change without reading the HUD.
@@ -305,15 +305,15 @@ The player can feel a large depth change without reading the HUD.
 
 # Phase 11 — Marine life
 
-- [ ] Small fish.
-- [ ] Simple schooling.
-- [ ] Fish flee the submarine.
-- [ ] Fish react to light.
-- [ ] Fish react to sonar.
-- [ ] Jellyfish.
-- [ ] Small bioluminescent creatures.
-- [ ] Distant silhouettes.
-- [ ] Rare decorative creatures.
+- [x] Small fish.
+- [x] Simple schooling.
+- [x] Fish flee the submarine.
+- [x] Fish react to light.
+- [x] Fish react to sonar.
+- [x] Jellyfish.
+- [x] Small bioluminescent creatures.
+- [x] Distant silhouettes.
+- [x] Rare decorative creatures.
 
 Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 
@@ -322,31 +322,31 @@ Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 # Phase 12 — Audio
 
 ## Ambience
-- [ ] Continuous underwater bed.
-- [ ] Low rumble.
-- [ ] Water texture.
-- [ ] Small hull/environment creaks.
-- [ ] Distant sounds.
+- [x] Continuous underwater bed.
+- [x] Low rumble.
+- [x] Water texture.
+- [x] Small hull/environment creaks.
+- [x] Distant sounds.
 
 ## Submarine
 - [x] Engine.
 - [x] Propeller.
 - [x] Pitch/intensity follows speed.
-- [ ] Ballast sound.
+- [x] Ballast sound.
 - [x] Impacts.
-- [ ] Hull stress.
+- [x] Hull stress.
 
 ## Sonar
 - [x] Ping.
 - [x] Echo.
-- [ ] Special detection response.
+- [x] Special detection response.
 
 ## Mix
-- [ ] Music bus.
-- [ ] Ambience bus.
-- [ ] Effects bus.
-- [ ] UI bus.
-- [ ] Master volume.
+- [x] Music bus.
+- [x] Ambience bus.
+- [x] Effects bus.
+- [x] UI bus.
+- [x] Master volume.
 
 ---
 
