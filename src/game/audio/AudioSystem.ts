@@ -14,10 +14,17 @@ export class AudioSystem {
   private ambienceFilter: BiquadFilterNode | null = null;
   private depth = 0;
   private creakTimer = 0;
+  private distantTimer = 0;
+  private ambienceGain: GainNode | null = null;
+  private effectsGain: GainNode | null = null;
+  private uiGain: GainNode | null = null;
+  private musicGain: GainNode | null = null;
+  private masterGain: GainNode | null = null;
 
   public unlock(): void {
     const context = this.ensureContext();
     this.resume(context);
+    this.ensureMix(context);
     this.ensureEngine(context);
     this.ensureDepthAmbience(context);
   }
@@ -73,6 +80,12 @@ export class AudioSystem {
 
   public updateDepth(deltaMs: number, depth: number): void {
     this.depth = Phaser.Math.Clamp(depth, 0, 1);
+    this.distantTimer -= deltaMs / 1_000;
+
+    if (this.context && this.distantTimer <= 0) {
+      this.playDistantSound();
+      this.distantTimer = Phaser.Math.FloatBetween(8, 16);
+    }
     if (!this.context || this.depth < 0.58) {
       this.creakTimer = Math.max(0, this.creakTimer - deltaMs / 1_000);
       return;
@@ -141,7 +154,7 @@ export class AudioSystem {
     );
 
     oscillator.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(this.effectsGain ?? context.destination);
     oscillator.start();
     oscillator.stop(context.currentTime + 0.17);
   }
@@ -162,6 +175,44 @@ export class AudioSystem {
     this.rumbleOscillator = null;
     this.rumbleGain = null;
     this.ambienceFilter = null;
+    this.ambienceGain = null;
+    this.effectsGain = null;
+    this.uiGain = null;
+    this.musicGain = null;
+    this.masterGain = null;
+  }
+
+  public playBallast(intensity: number): void {
+    const context = this.ensureContext();
+    this.resume(context);
+    this.ensureMix(context);
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = 'triangle';
+    oscillator.frequency.value = 58 + Math.abs(intensity) * 22;
+    gain.gain.setValueAtTime(0.001, context.currentTime);
+    gain.gain.linearRampToValueAtTime(0.018, context.currentTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.22);
+    oscillator.connect(gain);
+    gain.connect(this.effectsGain ?? context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.24);
+  }
+
+  public playDetection(): void {
+    const context = this.ensureContext();
+    this.resume(context);
+    this.ensureMix(context);
+    this.playPing(context, context.currentTime, 1040, 0.022, 0.18);
+  }
+
+  public setMasterVolume(value: number): void {
+    if (!this.context) return;
+    this.masterGain?.gain.setTargetAtTime(
+      Phaser.Math.Clamp(value, 0, 1),
+      this.context.currentTime,
+      0.05,
+    );
   }
 
   private ensureContext(): AudioContext {
@@ -176,6 +227,39 @@ export class AudioSystem {
     if (context.state === 'suspended') {
       void context.resume();
     }
+  }
+
+  private ensureMix(context: AudioContext): void {
+    if (
+      this.masterGain &&
+      this.ambienceGain &&
+      this.effectsGain &&
+      this.uiGain &&
+      this.musicGain
+    ) {
+      return;
+    }
+
+    const master = context.createGain();
+    const ambience = context.createGain();
+    const effects = context.createGain();
+    const ui = context.createGain();
+    const music = context.createGain();
+    master.gain.value = 0.85;
+    ambience.gain.value = 0.75;
+    effects.gain.value = 0.9;
+    ui.gain.value = 0.8;
+    music.gain.value = 0.7;
+    ambience.connect(master);
+    effects.connect(master);
+    ui.connect(master);
+    music.connect(master);
+    master.connect(context.destination);
+    this.masterGain = master;
+    this.ambienceGain = ambience;
+    this.effectsGain = effects;
+    this.uiGain = ui;
+    this.musicGain = music;
   }
 
   private ensureEngine(context: AudioContext): void {
@@ -196,7 +280,7 @@ export class AudioSystem {
 
     oscillator.connect(filter);
     filter.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(this.effectsGain ?? context.destination);
     oscillator.start();
 
     this.engineOscillator = oscillator;
@@ -222,7 +306,7 @@ export class AudioSystem {
 
     oscillator.connect(filter);
     filter.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(this.ambienceGain ?? context.destination);
     oscillator.start();
 
     this.rumbleOscillator = oscillator;
@@ -252,9 +336,25 @@ export class AudioSystem {
 
     oscillator.connect(filter);
     filter.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(this.effectsGain ?? context.destination);
     oscillator.start(now);
     oscillator.stop(now + 0.35);
+  }
+
+  private playDistantSound(): void {
+    if (!this.context) return;
+    const context = this.context;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = Phaser.Math.FloatBetween(45, 72);
+    gain.gain.setValueAtTime(0.001, context.currentTime);
+    gain.gain.linearRampToValueAtTime(0.006, context.currentTime + 0.35);
+    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1.8);
+    oscillator.connect(gain);
+    gain.connect(this.ambienceGain ?? context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 1.85);
   }
 
   private playPing(
@@ -282,7 +382,7 @@ export class AudioSystem {
     );
 
     oscillator.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(this.effectsGain ?? context.destination);
     oscillator.start(startTime);
     oscillator.stop(startTime + duration + 0.02);
   }
