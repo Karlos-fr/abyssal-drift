@@ -384,15 +384,15 @@ Retro sprites remain crisp and deliberately low-resolution. Modern effects may u
 
 Only start once gameplay feels good.
 
-- [ ] Subtle global water distortion.
-- [ ] Gentle sinusoidal motion.
-- [ ] Local distortion around large bubbles if useful.
-- [ ] Simple caustics.
-- [ ] Light bloom.
-- [ ] Extremely subtle impact chromatic aberration if it improves the look.
-- [ ] Depth vignette.
-- [ ] Discreet grain.
-- [ ] Depth-dependent contrast.
+- [x] Subtle global water distortion.
+- [x] Gentle sinusoidal motion.
+- [x] Local distortion around large bubbles if useful.
+- [x] Simple caustics.
+- [x] Light bloom.
+- [x] Extremely subtle impact chromatic aberration if it improves the look.
+- [x] Depth vignette.
+- [x] Discreet grain.
+- [x] Depth-dependent contrast.
 
 Every advanced effect must be individually disableable.
 
