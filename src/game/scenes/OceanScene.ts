@@ -1,15 +1,16 @@
 import Phaser from 'phaser';
 import {
   GAME_HEIGHT,
-  GAME_WIDTH,
   SceneKey,
   WORLD_HEIGHT,
   WORLD_WIDTH,
 } from '../core/constants';
 import { DebugOverlay } from '../debug/DebugOverlay';
 import { BubbleSystem } from '../effects/BubbleSystem';
+import { ParticleField } from '../effects/ParticleField';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
+import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
 
 export class OceanScene extends Phaser.Scene {
@@ -18,6 +19,8 @@ export class OceanScene extends Phaser.Scene {
   private debugOverlay!: DebugOverlay;
   private cave!: CaveSystem;
   private bubbles!: BubbleSystem;
+  private particles!: ParticleField;
+  private sonar!: SonarSystem;
   private cameraTarget!: Phaser.GameObjects.Zone;
   private cameraLookAhead = 0;
 
@@ -29,7 +32,9 @@ export class OceanScene extends Phaser.Scene {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
 
+    this.particles = new ParticleField(this);
     this.cave = new CaveSystem(this, WORLD_WIDTH, WORLD_HEIGHT);
+    this.sonar = new SonarSystem(this);
     this.submarine = new Submarine(this, 190, 170);
     this.bubbles = new BubbleSystem(this);
     this.controls = new InputController(this);
@@ -47,7 +52,7 @@ export class OceanScene extends Phaser.Scene {
     camera.startFollow(this.cameraTarget, true, 0.08, 0.08);
 
     this.add
-      .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD  ·  MOVE', {
+      .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD · MOVE   SPACE · SONAR', {
         fontFamily: 'monospace',
         fontSize: '7px',
         color: '#76aeb7',
@@ -76,7 +81,16 @@ export class OceanScene extends Phaser.Scene {
       );
     }
 
+    if (
+      this.controls.readSonarPressed() &&
+      this.sonar.trigger(this.submarine.x, this.submarine.y)
+    ) {
+      this.cameras.main.shake(65, 0.0012);
+    }
+
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
+    this.particles.update(this.submarine, this.submarine.motion, delta);
+    this.sonar.update(delta);
     this.updateCameraLookAhead(delta);
     this.debugOverlay.update(delta, this.game.loop.actualFps);
   }
@@ -123,19 +137,6 @@ export class OceanScene extends Phaser.Scene {
         1,
       );
       background.fillRect(0, y, WORLD_WIDTH, stripeHeight + 1);
-    }
-
-    const particles = this.add.graphics().setDepth(-50);
-    particles.fillStyle(0xa7dbe0, 0.16);
-    const random = new Phaser.Math.RandomDataGenerator([
-      'abyssal-drift-ocean',
-    ]);
-
-    for (let index = 0; index < 280; index += 1) {
-      const x = random.between(0, WORLD_WIDTH);
-      const y = random.between(20, WORLD_HEIGHT - 20);
-      const radius = random.realInRange(0.35, 1.15);
-      particles.fillCircle(x, y, radius);
     }
   }
 }
