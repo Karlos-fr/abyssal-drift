@@ -1,8 +1,8 @@
-import type Phaser from 'phaser';
+import { BlendModes, Math as PhaserMath } from 'phaser';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
 
 interface LightRay {
-  shape: Phaser.GameObjects.Graphics;
+  shape: import('phaser').GameObjects.Graphics;
   baseAlpha: number;
   phase: number;
   speed: number;
@@ -54,7 +54,7 @@ export class OceanAmbienceSystem {
 
   private createVegetation(scene: Phaser.Scene): void {
     const plants = scene.add.graphics().setDepth(-8);
-    const random = new Phaser.Math.RandomDataGenerator(['abyssal-plants']);
+    const random = new PhaserMath.RandomDataGenerator(['abyssal-plants']);
 
     for (let index = 0; index < 52; index += 1) {
       const x = random.between(70, WORLD_WIDTH - 70);
@@ -76,7 +76,7 @@ export class OceanAmbienceSystem {
   }
 
   private createFloatingDebris(scene: Phaser.Scene): void {
-    const random = new Phaser.Math.RandomDataGenerator(['abyssal-debris']);
+    const random = new PhaserMath.RandomDataGenerator(['abyssal-debris']);
 
     for (let index = 0; index < 34; index += 1) {
       const width = random.realInRange(1.5, 4);
@@ -104,7 +104,7 @@ export class OceanAmbienceSystem {
       const width = 42 + (index % 3) * 18;
       ray.fillStyle(0x9de8e5, 1);
       ray.fillTriangle(x, 58, x + width, 58, x + width * 2.15, 430);
-      ray.setBlendMode(Phaser.BlendModes.ADD);
+      ray.setBlendMode(BlendModes.ADD);
 
       const baseAlpha = 0.025 + (index % 4) * 0.008;
       ray.setAlpha(baseAlpha);
