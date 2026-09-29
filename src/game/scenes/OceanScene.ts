@@ -7,9 +7,11 @@ import {
 } from '../core/constants';
 import { DebugOverlay } from '../debug/DebugOverlay';
 import { BubbleSystem } from '../effects/BubbleSystem';
+import { ImpactEffectSystem } from '../effects/ImpactEffectSystem';
 import { ParticleField } from '../effects/ParticleField';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
+import { DepthSystem } from '../ocean/DepthSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
 
@@ -18,8 +20,10 @@ export class OceanScene extends Phaser.Scene {
   private controls!: InputController;
   private debugOverlay!: DebugOverlay;
   private cave!: CaveSystem;
+  private depthSystem!: DepthSystem;
   private bubbles!: BubbleSystem;
   private particles!: ParticleField;
+  private impacts!: ImpactEffectSystem;
   private sonar!: SonarSystem;
   private cameraTarget!: Phaser.GameObjects.Zone;
   private cameraLookAhead = 0;
@@ -34,9 +38,11 @@ export class OceanScene extends Phaser.Scene {
 
     this.particles = new ParticleField(this);
     this.cave = new CaveSystem(this, WORLD_WIDTH, WORLD_HEIGHT);
+    this.depthSystem = new DepthSystem(this);
     this.sonar = new SonarSystem(this);
     this.submarine = new Submarine(this, 190, 170);
     this.bubbles = new BubbleSystem(this);
+    this.impacts = new ImpactEffectSystem(this);
     this.controls = new InputController(this);
     this.debugOverlay = new DebugOverlay(this);
 
@@ -65,6 +71,7 @@ export class OceanScene extends Phaser.Scene {
     const movement = this.controls.readMovement();
     this.submarine.updateFromInput(movement, delta);
 
+    const preCollisionMotion = this.submarine.motion;
     const collision = this.cave.resolve(
       this.submarine.x,
       this.submarine.y,
@@ -73,12 +80,25 @@ export class OceanScene extends Phaser.Scene {
     );
 
     if (collision.hitHorizontal || collision.hitVertical) {
+      const impactStrength = Math.max(
+        collision.hitHorizontal ? Math.abs(preCollisionMotion.velocityX) : 0,
+        collision.hitVertical ? Math.abs(preCollisionMotion.velocityY) : 0,
+      );
+
       this.submarine.resolveCollision(
         collision.x,
         collision.y,
         collision.hitHorizontal,
         collision.hitVertical,
       );
+
+      if (impactStrength > 6) {
+        this.triggerImpact(
+          impactStrength,
+          collision.hitHorizontal,
+          collision.hitVertical,
+        );
+      }
     }
 
     if (
@@ -90,9 +110,37 @@ export class OceanScene extends Phaser.Scene {
 
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
     this.particles.update(this.submarine, this.submarine.motion, delta);
+    this.impacts.update(delta);
     this.sonar.update(delta);
+    this.depthSystem.update(this.submarine.y);
     this.updateCameraLookAhead(delta);
     this.debugOverlay.update(delta, this.game.loop.actualFps);
+  }
+
+  private triggerImpact(
+    impactStrength: number,
+    hitHorizontal: boolean,
+    hitVertical: boolean,
+  ): void {
+    const normalized = Phaser.Math.Clamp(impactStrength / 72, 0, 1);
+
+    this.impacts.trigger(
+      this.submarine.x,
+      this.submarine.y,
+      impactStrength,
+      hitHorizontal,
+      hitVertical,
+    );
+    this.bubbles.burstAt(
+      this.submarine.x,
+      this.submarine.y,
+      Math.round(4 + normalized * 9),
+    );
+
+    this.cameras.main.shake(
+      Math.round(55 + normalized * 85),
+      0.001 + normalized * 0.0035,
+    );
   }
 
   private updateCameraLookAhead(deltaMs: number): void {
