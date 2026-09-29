@@ -67,7 +67,7 @@ Keep gameplay logic, presentation and effects separated from the beginning.
 - [x] Create OceanScene.
 - [ ] Add a simple asset strategy.
 - [x] Add keyboard input abstraction.
-- [ ] Reserve a clean path for touch input.
+- [x] Reserve a clean path for touch input.
 - [ ] Add a common update-system interface.
 - [ ] Add debug mode.
 - [x] Add FPS display.
@@ -109,7 +109,7 @@ Make movement pleasant before building the game around it.
 - [x] AZERTY ZQSD.
 - [x] QWERTY WASD.
 - [ ] Gamepad.
-- [ ] Touch-control abstraction.
+- [x] Touch-control abstraction.
 - [ ] Remapping later if useful.
 
 ## Done when
@@ -497,7 +497,7 @@ Targets:
 - [ ] HUD size.
 - [ ] Rebind controls.
 - [ ] Gamepad.
-- [ ] Touch.
+- [x] Touch.
 
 ---
 
