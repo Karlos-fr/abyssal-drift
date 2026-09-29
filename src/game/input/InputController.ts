@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { TouchControls } from './TouchControls';
 
 export interface MovementInput {
   horizontal: number;
@@ -17,6 +18,7 @@ export class InputController {
   private readonly a: Phaser.Input.Keyboard.Key;
   private readonly w: Phaser.Input.Keyboard.Key;
   private readonly sonar: Phaser.Input.Keyboard.Key;
+  private readonly touch: TouchControls;
 
   public constructor(scene: Phaser.Scene) {
     if (!scene.input.keyboard) {
@@ -35,20 +37,40 @@ export class InputController {
     this.a = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.w = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.sonar = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.touch = new TouchControls(scene);
+  }
+
+  public get isTouchEnabled(): boolean {
+    return this.touch.isEnabled;
   }
 
   public readMovement(): MovementInput {
-    const horizontal =
+    const keyboardHorizontal =
       Number(this.right.isDown || this.d.isDown) -
       Number(this.left.isDown || this.q.isDown || this.a.isDown);
-    const vertical =
+    const keyboardVertical =
       Number(this.down.isDown || this.s.isDown) -
       Number(this.up.isDown || this.z.isDown || this.w.isDown);
+    const touch = this.touch.readMovement();
 
-    return { horizontal, vertical };
+    return {
+      horizontal: Phaser.Math.Clamp(
+        keyboardHorizontal + touch.horizontal,
+        -1,
+        1,
+      ),
+      vertical: Phaser.Math.Clamp(
+        keyboardVertical + touch.vertical,
+        -1,
+        1,
+      ),
+    };
   }
 
   public readSonarPressed(): boolean {
-    return Phaser.Input.Keyboard.JustDown(this.sonar);
+    return (
+      Phaser.Input.Keyboard.JustDown(this.sonar) ||
+      this.touch.consumeSonarPressed()
+    );
   }
 }
