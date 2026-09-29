@@ -7,13 +7,19 @@ import {
   WORLD_WIDTH,
 } from '../core/constants';
 import { DebugOverlay } from '../debug/DebugOverlay';
+import { BubbleSystem } from '../effects/BubbleSystem';
 import { InputController } from '../input/InputController';
+import { CaveSystem } from '../ocean/CaveSystem';
 import { Submarine } from '../submarine/Submarine';
 
 export class OceanScene extends Phaser.Scene {
   private submarine!: Submarine;
   private controls!: InputController;
   private debugOverlay!: DebugOverlay;
+  private cave!: CaveSystem;
+  private bubbles!: BubbleSystem;
+  private cameraTarget!: Phaser.GameObjects.Zone;
+  private cameraLookAhead = 0;
 
   public constructor() {
     super(SceneKey.Ocean);
@@ -23,14 +29,22 @@ export class OceanScene extends Phaser.Scene {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
 
-    this.submarine = new Submarine(this, GAME_WIDTH / 2, GAME_HEIGHT / 2);
+    this.cave = new CaveSystem(this, WORLD_WIDTH, WORLD_HEIGHT);
+    this.submarine = new Submarine(this, 190, 170);
+    this.bubbles = new BubbleSystem(this);
     this.controls = new InputController(this);
     this.debugOverlay = new DebugOverlay(this);
 
+    this.cameraTarget = this.add.zone(
+      this.submarine.x,
+      this.submarine.y,
+      1,
+      1,
+    );
+
     const camera = this.cameras.main;
     camera.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    camera.startFollow(this.submarine, true, 0.08, 0.08);
-    camera.setFollowOffset(-34, 0);
+    camera.startFollow(this.cameraTarget, true, 0.08, 0.08);
 
     this.add
       .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD  ·  MOVE', {
@@ -45,7 +59,46 @@ export class OceanScene extends Phaser.Scene {
   public update(_time: number, delta: number): void {
     const movement = this.controls.readMovement();
     this.submarine.updateFromInput(movement, delta);
+
+    const collision = this.cave.resolve(
+      this.submarine.x,
+      this.submarine.y,
+      this.submarine.collisionHalfWidth,
+      this.submarine.collisionHalfHeight,
+    );
+
+    if (collision.hitHorizontal || collision.hitVertical) {
+      this.submarine.resolveCollision(
+        collision.x,
+        collision.y,
+        collision.hitHorizontal,
+        collision.hitVertical,
+      );
+    }
+
+    this.bubbles.update(this.submarine, this.submarine.motion, delta);
+    this.updateCameraLookAhead(delta);
     this.debugOverlay.update(delta, this.game.loop.actualFps);
+  }
+
+  private updateCameraLookAhead(deltaMs: number): void {
+    const deltaSeconds = Math.min(deltaMs / 1_000, 1 / 20);
+    const targetLookAhead = Phaser.Math.Clamp(
+      this.submarine.motion.velocityX * 0.62,
+      -46,
+      46,
+    );
+
+    this.cameraLookAhead = Phaser.Math.Linear(
+      this.cameraLookAhead,
+      targetLookAhead,
+      1 - Math.exp(-3.5 * deltaSeconds),
+    );
+
+    this.cameraTarget.setPosition(
+      this.submarine.x + this.cameraLookAhead,
+      this.submarine.y + this.submarine.motion.velocityY * 0.12,
+    );
   }
 
   private createOceanBackdrop(): void {
@@ -55,7 +108,16 @@ export class OceanScene extends Phaser.Scene {
     const stripeHeight = 24;
     for (let y = 0; y < WORLD_HEIGHT; y += stripeHeight) {
       const t = y / WORLD_HEIGHT;
-      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(8, 63, 77, 1, 8, 18, 1, t);
+      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(
+        8,
+        63,
+        77,
+        1,
+        8,
+        18,
+        1,
+        t,
+      );
       background.fillStyle(
         Phaser.Display.Color.GetColor(color.r, color.g, color.b),
         1,
@@ -74,22 +136,6 @@ export class OceanScene extends Phaser.Scene {
       const y = random.between(20, WORLD_HEIGHT - 20);
       const radius = random.realInRange(0.35, 1.15);
       particles.fillCircle(x, y, radius);
-    }
-
-    const floor = this.add.graphics().setDepth(-20);
-    floor.fillStyle(0x061017, 1);
-    floor.fillRect(0, WORLD_HEIGHT - 50, WORLD_WIDTH, 50);
-    floor.fillStyle(0x0b1b22, 1);
-
-    for (let x = 0; x < WORLD_WIDTH; x += 48) {
-      floor.fillTriangle(
-        x,
-        WORLD_HEIGHT - 50,
-        x + 28,
-        WORLD_HEIGHT - 68,
-        x + 62,
-        WORLD_HEIGHT - 50,
-      );
     }
   }
 }
