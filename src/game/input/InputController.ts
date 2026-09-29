@@ -16,6 +16,7 @@ export class InputController {
   private readonly s: Phaser.Input.Keyboard.Key;
   private readonly a: Phaser.Input.Keyboard.Key;
   private readonly w: Phaser.Input.Keyboard.Key;
+  private readonly sonar: Phaser.Input.Keyboard.Key;
 
   public constructor(scene: Phaser.Scene) {
     if (!scene.input.keyboard) {
@@ -33,6 +34,7 @@ export class InputController {
     this.s = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.a = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.w = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.sonar = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   }
 
   public readMovement(): MovementInput {
@@ -44,5 +46,9 @@ export class InputController {
       Number(this.up.isDown || this.z.isDown || this.w.isDown);
 
     return { horizontal, vertical };
+  }
+
+  public readSonarPressed(): boolean {
+    return Phaser.Input.Keyboard.JustDown(this.sonar);
   }
 }
