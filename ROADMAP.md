@@ -99,9 +99,9 @@ Make movement pleasant before building the game around it.
 - [x] Vertical velocity.
 - [x] Light buoyancy.
 - [x] Water drag.
-- [ ] Smooth acceleration limits.
+- [x] Smooth acceleration limits.
 - [x] Pitch following vertical movement.
-- [ ] Small response lag / smoothing.
+- [x] Small response lag / smoothing.
 - [x] Keep the submarine inside the playable area.
 
 ## Input tasks
@@ -246,7 +246,7 @@ Create a simple mechanic with strong audiovisual identity.
 ## Direction change
 - [ ] Pitch/roll-like visual response.
 - [ ] Small overshoot.
-- [ ] Smooth return.
+- [x] Smooth return.
 - [x] Bubble response.
 
 ## Vertical movement
