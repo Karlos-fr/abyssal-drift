@@ -353,28 +353,28 @@ Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 # Phase 13 — Final art direction
 
 ## Submarine
-- [ ] Main sprite.
-- [ ] Propeller.
-- [ ] Windows.
+- [x] Main sprite.
+- [x] Propeller.
+- [x] Windows.
 - [x] Lights.
-- [ ] Shadows.
-- [ ] Optional damage states.
-- [ ] Pilot animation only if visible and useful.
+- [x] Shadows.
+- [x] Optional damage states.
+- [x] Pilot animation only if visible and useful.
 
 ## Environment
-- [ ] Rocks.
-- [ ] Seabed.
-- [ ] Plants.
-- [ ] Wrecks.
-- [ ] Structures.
-- [ ] Interactive props.
+- [x] Rocks.
+- [x] Seabed.
+- [x] Plants.
+- [x] Wrecks.
+- [x] Structures.
+- [x] Interactive props.
 
 ## Palette
-- [ ] Surface palette.
-- [ ] Deep-water palette.
-- [ ] Sonar color.
-- [ ] Hazard color.
-- [ ] Interactive-object color.
+- [x] Surface palette.
+- [x] Deep-water palette.
+- [x] Sonar color.
+- [x] Hazard color.
+- [x] Interactive-object color.
 
 Retro sprites remain crisp and deliberately low-resolution. Modern effects may use transparency, interpolation, particles, additive blending, masks, filters and distortion.
 
