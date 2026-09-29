@@ -16,6 +16,12 @@ export class AudioSystem {
   private engineGain: GainNode | null = null;
   private engineFilter: BiquadFilterNode | null = null;
 
+  public unlock(): void {
+    const context = this.ensureContext();
+    this.resume(context);
+    this.ensureEngine(context);
+  }
+
   public updateEngine(motion: SubmarineMotion): void {
     const speed = Phaser.Math.Clamp(
       Math.abs(motion.velocityX) / MAX_HORIZONTAL_SPEED * 0.75 +
