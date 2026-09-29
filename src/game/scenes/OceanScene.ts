@@ -14,6 +14,7 @@ import { ParticleField } from '../effects/ParticleField';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
+import { EnvironmentArtSystem } from '../ocean/EnvironmentArtSystem';
 import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
 import { MarineLifeSystem } from '../ocean/MarineLifeSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
@@ -47,6 +48,7 @@ export class OceanScene extends Phaser.Scene {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
     this.ambience = new OceanAmbienceSystem(this);
+    new EnvironmentArtSystem(this);
     this.marineLife = new MarineLifeSystem(this);
 
     this.audio = new AudioSystem();
