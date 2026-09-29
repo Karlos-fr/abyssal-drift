@@ -14,12 +14,7 @@ export class MenuScene extends Phaser.Scene {
     const backdrop = this.add.graphics();
     for (let y = 0; y < GAME_HEIGHT; y += 6) {
       const t = y / GAME_HEIGHT;
-      const color = Phaser.Display.Color.Interpolate.ColorWithColor(
-        { r: 8, g: 55, b: 72 },
-        { r: 2, g: 11, b: 22 },
-        1,
-        t,
-      );
+      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(8, 55, 72, 2, 11, 22, 1, t);
       backdrop.fillStyle(Phaser.Display.Color.GetColor(color.r, color.g, color.b), 1);
       backdrop.fillRect(0, y, GAME_WIDTH, 6);
     }
