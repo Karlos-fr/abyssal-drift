@@ -53,6 +53,7 @@ export class ParticleField {
     motion: SubmarineMotion,
     deltaMs: number,
     lighting?: DynamicLightSystem,
+    depth = 0,
   ): void {
     const deltaSeconds = Math.min(deltaMs / 1_000, 1 / 20);
 
@@ -99,6 +100,11 @@ export class ParticleField {
         particle.sprite.y += washDy * washStrength * 0.08 * deltaSeconds;
       }
 
+      const depthDensity = 0.72 + depth * 0.65;
+      particle.sprite.setVisible(
+        particle.layer > 0 || depth > 0.32 || particle.sprite.x % 3 < depthDensity,
+      );
+
       if (lighting) {
         const light = lighting.getLightAmountAt(
           particle.sprite.x,
@@ -106,7 +112,11 @@ export class ParticleField {
           submarine,
         );
         particle.sprite.setAlpha(
-          Phaser.Math.Clamp(particle.baseAlpha + light * 0.55, 0, 0.72),
+          Phaser.Math.Clamp(
+            particle.baseAlpha * depthDensity + light * 0.55,
+            0,
+            0.78,
+          ),
         );
         particle.sprite.setScale(1 + light * 0.32);
       }
