@@ -158,8 +158,8 @@ Make bubbles one of the game's visual signatures.
 - [x] Cleanup outside active area.
 - [x] Object pooling.
 - [x] Large impact bubbles.
-- [ ] Ambient bubbles from scenery.
-- [ ] Surface pop when relevant.
+- [x] Ambient bubbles from scenery.
+- [x] Surface pop when relevant.
 - [x] Configurable particle cap.
 
 ## Done when
@@ -171,11 +171,11 @@ Bubbles strongly reinforce motion and depth without harming frame rate.
 
 ## Background
 - [x] Vertical water gradient.
-- [ ] Multiple scenery layers.
-- [ ] Slow parallax.
-- [ ] Rock silhouettes.
-- [ ] Vegetation.
-- [ ] Floating debris.
+- [x] Multiple scenery layers.
+- [x] Slow parallax.
+- [x] Rock silhouettes.
+- [x] Vegetation.
+- [x] Floating debris.
 
 ## Particles
 - [x] Create ParticleField.
@@ -185,10 +185,10 @@ Bubbles strongly reinforce motion and depth without harming frame rate.
 - [x] Slight response to submarine movement.
 
 ## Surface light
-- [ ] Stylized light rays.
-- [ ] Slow intensity variation.
-- [ ] Depth haze.
-- [ ] Progressive loss of color with depth.
+- [x] Stylized light rays.
+- [x] Slow intensity variation.
+- [x] Depth haze.
+- [x] Progressive loss of color with depth.
 
 ## Done when
 A still screenshot already reads as retro-modern underwater exploration.
@@ -279,7 +279,7 @@ Create a normalized depth value from 0.0 near the surface to 1.0 at maximum dept
 
 ## Visual
 - [x] Darken environment with depth.
-- [ ] Remove warm colors progressively.
+- [x] Remove warm colors progressively.
 - [x] Increase haze.
 - [x] Reduce visibility.
 - [x] Increase importance of the headlight.
