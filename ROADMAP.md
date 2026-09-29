@@ -28,7 +28,7 @@ Create a reliable, lightweight development base.
 - [x] Add responsive upscale.
 - [x] Use Phaser WebGL/automatic renderer with browser fallback.
 - [ ] Verify desktop.
-- [ ] Verify mobile.
+- [x] Verify mobile.
 - [x] Display a first test scene.
 
 ## Done when
@@ -244,7 +244,7 @@ Create a simple mechanic with strong audiovisual identity.
 - [ ] Push suspended particles behind the propeller.
 
 ## Direction change
-- [ ] Pitch/roll-like visual response.
+- [x] Pitch/roll-like visual response.
 - [ ] Small overshoot.
 - [x] Smooth return.
 - [x] Bubble response.
@@ -330,7 +330,7 @@ Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 
 ## Submarine
 - [x] Engine.
-- [ ] Propeller.
+- [x] Propeller.
 - [x] Pitch/intensity follows speed.
 - [ ] Ballast sound.
 - [x] Impacts.
@@ -356,7 +356,7 @@ Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 - [ ] Main sprite.
 - [ ] Propeller.
 - [ ] Windows.
-- [ ] Lights.
+- [x] Lights.
 - [ ] Shadows.
 - [ ] Optional damage states.
 - [ ] Pilot animation only if visible and useful.
@@ -416,7 +416,7 @@ Tasks:
 - [ ] Small HUD animation.
 - [ ] Impact reaction.
 - [ ] Reduced-HUD mode.
-- [ ] Mobile readability.
+- [x] Mobile readability.
 
 ---
 
