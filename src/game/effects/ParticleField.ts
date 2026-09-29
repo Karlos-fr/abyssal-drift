@@ -75,6 +75,30 @@ export class ParticleField {
           motion.velocityY * influence * layerInfluence * deltaSeconds;
       }
 
+      // Prop wash pushes nearby suspended matter backwards in a narrow cone.
+      // This makes thrust readable even when bubbles are hard to see.
+      const propellerX = submarine.x - 28;
+      const propellerY = submarine.y;
+      const washDx = particle.sprite.x - propellerX;
+      const washDy = particle.sprite.y - propellerY;
+      const washSpeed = Math.abs(motion.velocityX);
+      const behindPropeller =
+        motion.velocityX >= 0 ? washDx <= 0 : washDx >= 0;
+      const washDistance = Math.abs(washDx);
+
+      if (
+        washSpeed > 5 &&
+        behindPropeller &&
+        washDistance < 82 &&
+        Math.abs(washDy) < 14 + washDistance * 0.12
+      ) {
+        const washStrength =
+          (1 - washDistance / 82) * Phaser.Math.Clamp(washSpeed / 72, 0, 1);
+        const direction = motion.velocityX >= 0 ? -1 : 1;
+        particle.sprite.x += direction * washStrength * 34 * deltaSeconds;
+        particle.sprite.y += washDy * washStrength * 0.08 * deltaSeconds;
+      }
+
       if (lighting) {
         const light = lighting.getLightAmountAt(
           particle.sprite.x,
