@@ -47,3 +47,12 @@ The repository already contains:
 - FPS debug overlay.
 
 Final art, sonar, bubbles and cave collisions intentionally come after the movement baseline.
+
+
+## Play
+
+The latest build is deployed automatically to GitHub Pages:
+
+https://karlos-fr.github.io/abyssal-drift/
+
+On touch devices, use the analog joystick on the left and the SONAR button on the right. Landscape orientation is recommended on iPhone.
