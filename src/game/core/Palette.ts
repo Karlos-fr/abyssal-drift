@@ -1,0 +1,16 @@
+export const Palette = {
+  surfaceWater: 0x083f4d,
+  midWater: 0x062631,
+  deepWater: 0x010812,
+  rock: 0x071218,
+  rockHighlight: 0x12313a,
+  seabed: 0x0b1b21,
+  plant: 0x267267,
+  submarineHull: 0xb4a85a,
+  submarineShade: 0x625f35,
+  submarineHighlight: 0xd3c875,
+  glass: 0x72d6df,
+  sonar: 0x78f5eb,
+  hazard: 0xe39a63,
+  interactive: 0x8ff0bd,
+} as const;
