@@ -26,29 +26,11 @@ export class Submarine extends Phaser.GameObjects.Container {
     super(scene, x, y);
     scene.add.existing(this);
 
-    // The headlight is built from many low-alpha slices. The overlapping
-    // additive layers create a soft falloff instead of visible solid triangles.
-    const headlightBeam = scene.add.graphics();
-    const beamLayers = 22;
-    for (let index = beamLayers; index >= 1; index -= 1) {
-      const t = index / beamLayers;
-      const length = 38 + t * 128;
-      const halfHeight = 4 + t * 36;
-      const alpha = 0.004 + (1 - t) * 0.005;
-      headlightBeam.fillStyle(0xc9fbff, alpha);
-      headlightBeam.fillTriangle(
-        15,
-        -2.2,
-        length,
-        -halfHeight,
-        length,
-        halfHeight,
-      );
-    }
-    headlightBeam.setBlendMode(Phaser.BlendModes.ADD);
-
+    // The actual beam is rendered in world space by DynamicLightSystem so it
+    // can be clipped against cave geometry. Only the physical lamp belongs to
+    // the submarine container.
     const headlightHalo = scene.add
-      .circle(17, -1, 6, 0xd8fdff, 0.13);
+      .circle(17, -1, 5, 0xd8fdff, 0.11);
     headlightHalo.setBlendMode(Phaser.BlendModes.ADD);
 
     const body = scene.add.ellipse(0, 0, 34, 14, 0xb3b35f);
@@ -85,7 +67,6 @@ export class Submarine extends Phaser.GameObjects.Container {
     const light = scene.add.circle(17, -1, 2, 0xf4f0c2, 1);
 
     this.add([
-      headlightBeam,
       headlightHalo,
       rearFairing,
       shaft,
@@ -99,11 +80,7 @@ export class Submarine extends Phaser.GameObjects.Container {
     ]);
     this.setDepth(20);
 
-    this.effects = new SubmarineEffects(
-      this,
-      headlightBeam,
-      headlightHalo,
-    );
+    this.effects = new SubmarineEffects(this, headlightHalo);
   }
 
   public get facingDirection(): number {
