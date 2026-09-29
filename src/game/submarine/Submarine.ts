@@ -27,6 +27,19 @@ export class Submarine extends Phaser.GameObjects.Container {
     super(scene, x, y);
     scene.add.existing(this);
 
+    const headlightBeam = scene.add.graphics();
+    headlightBeam.fillStyle(0xb9f8ff, 0.035);
+    headlightBeam.fillTriangle(15, -5, 150, -40, 150, 40);
+    headlightBeam.fillStyle(0xcdfcff, 0.055);
+    headlightBeam.fillTriangle(15, -3, 118, -23, 118, 23);
+    headlightBeam.fillStyle(0xe7ffff, 0.07);
+    headlightBeam.fillTriangle(15, -2, 82, -12, 82, 12);
+    headlightBeam.setBlendMode(Phaser.BlendModes.ADD);
+
+    const headlightHalo = scene.add
+      .circle(16, -1, 4.5, 0xcffcff, 0.14);
+    headlightHalo.setBlendMode(Phaser.BlendModes.ADD);
+
     const body = scene.add.ellipse(0, 0, 34, 14, 0xb3b35f);
     body.setStrokeStyle(2, 0x48492c, 1);
 
@@ -37,10 +50,24 @@ export class Submarine extends Phaser.GameObjects.Container {
     const light = scene.add.circle(17, -1, 1.8, 0xf4f0c2, 1);
     this.propeller = scene.add.rectangle(-20, 0, 3, 11, 0x8c9a78, 0.9);
 
-    this.add([this.propeller, body, belly, tower, windowFront, windowRear, light]);
+    this.add([
+      headlightBeam,
+      headlightHalo,
+      this.propeller,
+      body,
+      belly,
+      tower,
+      windowFront,
+      windowRear,
+      light,
+    ]);
     this.setDepth(20);
 
-    this.effects = new SubmarineEffects(this);
+    this.effects = new SubmarineEffects(
+      this,
+      headlightBeam,
+      headlightHalo,
+    );
   }
 
   public get facingDirection(): number {
