@@ -266,10 +266,10 @@ Create a simple mechanic with strong audiovisual identity.
 - [x] Metallic sound.
 - [x] Bubble burst.
 - [x] Small debris.
-- [ ] Optional sparks.
-- [ ] Submarine impact animation.
-- [ ] Temporary headlight disturbance.
-- [ ] HUD reaction.
+- [x] Optional sparks.
+- [x] Submarine impact animation.
+- [x] Temporary headlight disturbance.
+- [x] HUD reaction.
 
 ---
 
