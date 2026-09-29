@@ -236,16 +236,16 @@ Create a simple mechanic with strong audiovisual identity.
 ## Propulsion
 - [x] Animate propeller.
 - [x] Propeller speed follows thrust.
-- [ ] Tiny visual recoil.
+- [x] Tiny visual recoil.
 - [x] Engine vibration.
-- [ ] Very light camera feedback.
+- [x] Very light camera feedback.
 - [x] Engine sound responds to speed.
 - [x] More bubbles at high thrust.
-- [ ] Push suspended particles behind the propeller.
+- [x] Push suspended particles behind the propeller.
 
 ## Direction change
 - [x] Pitch/roll-like visual response.
-- [ ] Small overshoot.
+- [x] Small overshoot.
 - [x] Smooth return.
 - [x] Bubble response.
 
