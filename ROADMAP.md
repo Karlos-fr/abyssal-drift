@@ -123,16 +123,16 @@ Moving the submarine with no real content is already pleasant for at least 30 se
 Create a compact playground for the core mechanics.
 
 ## Tasks
-- [ ] Build a simple cave.
-- [ ] Ceiling, floor and walls.
-- [ ] Environment collisions.
-- [ ] Narrow passages.
-- [ ] One open chamber.
-- [ ] Obstacles.
-- [ ] Shallow and deep zones.
+- [x] Build a simple cave.
+- [x] Ceiling, floor and walls.
+- [x] Environment collisions.
+- [x] Narrow passages.
+- [x] One open chamber.
+- [x] Obstacles.
+- [x] Shallow and deep zones.
 - [x] Camera bounds.
 - [x] Smooth camera follow.
-- [ ] Look-ahead in movement direction.
+- [x] Look-ahead in movement direction.
 
 ## Done when
 The player can explore the test space for roughly 1–2 minutes.
@@ -145,22 +145,22 @@ The player can explore the test space for roughly 1–2 minutes.
 Make bubbles one of the game's visual signatures.
 
 ## Tasks
-- [ ] Create BubbleSystem.
-- [ ] Multiple bubble sizes.
-- [ ] Emit behind the propeller.
-- [ ] Emission depends on speed.
-- [ ] Random spawn offsets.
-- [ ] Individual rise speeds.
-- [ ] Horizontal drift.
-- [ ] Slight growth while rising.
-- [ ] Variable transparency.
-- [ ] Subtle deformation.
-- [ ] Cleanup outside active area.
-- [ ] Object pooling.
+- [x] Create BubbleSystem.
+- [x] Multiple bubble sizes.
+- [x] Emit behind the propeller.
+- [x] Emission depends on speed.
+- [x] Random spawn offsets.
+- [x] Individual rise speeds.
+- [x] Horizontal drift.
+- [x] Slight growth while rising.
+- [x] Variable transparency.
+- [x] Subtle deformation.
+- [x] Cleanup outside active area.
+- [x] Object pooling.
 - [ ] Large impact bubbles.
 - [ ] Ambient bubbles from scenery.
 - [ ] Surface pop when relevant.
-- [ ] Configurable particle cap.
+- [x] Configurable particle cap.
 
 ## Done when
 Bubbles strongly reinforce motion and depth without harming frame rate.
@@ -237,21 +237,21 @@ Create a simple mechanic with strong audiovisual identity.
 - [x] Animate propeller.
 - [x] Propeller speed follows thrust.
 - [ ] Tiny visual recoil.
-- [ ] Engine vibration.
+- [x] Engine vibration.
 - [ ] Very light camera feedback.
 - [ ] Engine sound responds to speed.
-- [ ] More bubbles at high thrust.
+- [x] More bubbles at high thrust.
 - [ ] Push suspended particles behind the propeller.
 
 ## Direction change
 - [ ] Pitch/roll-like visual response.
 - [ ] Small overshoot.
 - [ ] Smooth return.
-- [ ] Bubble response.
+- [x] Bubble response.
 
 ## Vertical movement
 - [x] Adjust submarine attitude.
-- [ ] Adjust bubble behaviour.
+- [x] Adjust bubble behaviour.
 - [x] Preserve readable vertical inertia.
 
 ---
@@ -260,7 +260,7 @@ Create a simple mechanic with strong audiovisual identity.
 
 - [ ] Measure impact strength.
 - [ ] Scale reaction by speed.
-- [ ] Small rebound.
+- [x] Small rebound.
 - [ ] Screen shake.
 - [ ] Very short flash.
 - [ ] Metallic sound.
@@ -577,10 +577,10 @@ Do not prioritize advanced shaders over movement and readability.
 - [x] inertia;
 - [x] buoyancy;
 - [x] camera;
-- [ ] simple cave;
-- [ ] collisions;
+- [x] simple cave;
+- [x] collisions;
 - [x] animated propeller;
-- [ ] bubbles;
+- [x] bubbles;
 - [ ] suspended particles;
 - [ ] headlight;
 - [ ] sonar;
