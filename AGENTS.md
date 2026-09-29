@@ -16,7 +16,8 @@ Build a small, polished 2D side-view submarine exploration game in TypeScript an
 - Use strict TypeScript. Avoid any.
 - Keep files focused and reasonably small.
 - Add comments for non-obvious design intent, not line-by-line narration.
-- Do not commit generated dist/ or node_modules/ directories.\n- When a ROADMAP.md task becomes genuinely complete, check it off in the same commit (or the immediately following documentation commit). Never mark aspirational or partially implemented work as complete.
+- Do not commit generated dist/ or node_modules/ directories.
+- When a ROADMAP.md task becomes genuinely complete, check it off in the same commit (or the immediately following documentation commit). Never mark aspirational or partially implemented work as complete.
 
 ## Validation before marking a roadmap task complete
 
