@@ -220,7 +220,7 @@ Create a simple mechanic with strong audiovisual identity.
 - [x] Cooldown.
 - [x] Expanding pulse.
 - [x] Alpha fade.
-- [ ] Sonar audio.
+- [x] Sonar audio.
 - [x] Small submarine flash.
 - [x] Temporary object reveal.
 - [x] Highlight scenery or interesting objects.
@@ -239,7 +239,7 @@ Create a simple mechanic with strong audiovisual identity.
 - [ ] Tiny visual recoil.
 - [x] Engine vibration.
 - [ ] Very light camera feedback.
-- [ ] Engine sound responds to speed.
+- [x] Engine sound responds to speed.
 - [x] More bubbles at high thrust.
 - [ ] Push suspended particles behind the propeller.
 
@@ -263,7 +263,7 @@ Create a simple mechanic with strong audiovisual identity.
 - [x] Small rebound.
 - [x] Screen shake.
 - [x] Very short flash.
-- [ ] Metallic sound.
+- [x] Metallic sound.
 - [x] Bubble burst.
 - [x] Small debris.
 - [ ] Optional sparks.
@@ -329,16 +329,16 @@ Fauna primarily supports atmosphere; do not build a complex ecosystem early.
 - [ ] Distant sounds.
 
 ## Submarine
-- [ ] Engine.
+- [x] Engine.
 - [ ] Propeller.
-- [ ] Pitch/intensity follows speed.
+- [x] Pitch/intensity follows speed.
 - [ ] Ballast sound.
-- [ ] Impacts.
+- [x] Impacts.
 - [ ] Hull stress.
 
 ## Sonar
-- [ ] Ping.
-- [ ] Echo.
+- [x] Ping.
+- [x] Echo.
 - [ ] Special detection response.
 
 ## Mix
@@ -585,8 +585,8 @@ Do not prioritize advanced shaders over movement and readability.
 - [x] headlight;
 - [x] sonar;
 - [x] screen shake;
-- [ ] engine audio;
-- [ ] sonar audio;
+- [x] engine audio;
+- [x] sonar audio;
 - [x] wall-impact feedback.
 
 ## Explicitly excluded
