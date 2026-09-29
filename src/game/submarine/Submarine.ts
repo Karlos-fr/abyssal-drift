@@ -15,6 +15,7 @@ export class Submarine extends Phaser.GameObjects.Container {
   private readonly physicsModel = new SubmarinePhysics();
   private readonly effects: SubmarineEffects;
   private readonly propeller: Phaser.GameObjects.Container;
+  private readonly visualBody: Phaser.GameObjects.Container;
   private elapsedSeconds = 0;
   private currentMotion: SubmarineMotion = {
     velocityX: 0,
@@ -66,7 +67,7 @@ export class Submarine extends Phaser.GameObjects.Container {
     const windowRear = scene.add.circle(0, -1, 2.4, 0x6cb8c5, 0.85);
     const light = scene.add.circle(17, -1, 2, 0xf4f0c2, 1);
 
-    this.add([
+    this.visualBody = scene.add.container(0, 0, [
       headlightHalo,
       rearFairing,
       shaft,
@@ -78,9 +79,14 @@ export class Submarine extends Phaser.GameObjects.Container {
       windowRear,
       light,
     ]);
+    this.add(this.visualBody);
     this.setDepth(20);
 
-    this.effects = new SubmarineEffects(this, headlightHalo);
+    this.effects = new SubmarineEffects(
+      this,
+      this.visualBody,
+      headlightHalo,
+    );
   }
 
   public get facingDirection(): number {
@@ -125,7 +131,12 @@ export class Submarine extends Phaser.GameObjects.Container {
         : Math.sign(this.currentMotion.velocityX);
     this.propeller.rotation +=
       deltaSeconds * (5 + speedRatio * 22) * propellerDirection;
-    this.effects.update(speedRatio, this.elapsedSeconds);
+    this.effects.update(
+      speedRatio,
+      input.horizontal,
+      this.elapsedSeconds,
+      deltaSeconds,
+    );
 
     return this.currentMotion;
   }
