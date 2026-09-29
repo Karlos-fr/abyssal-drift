@@ -11,6 +11,7 @@ import { BubbleSystem } from '../effects/BubbleSystem';
 import { DynamicLightSystem } from '../effects/DynamicLightSystem';
 import { ImpactEffectSystem } from '../effects/ImpactEffectSystem';
 import { ParticleField } from '../effects/ParticleField';
+import { WaterPostProcessSystem } from '../effects/WaterPostProcessSystem';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
@@ -33,6 +34,7 @@ export class OceanScene extends Phaser.Scene {
   private particles!: ParticleField;
   private impacts!: ImpactEffectSystem;
   private dynamicLight!: DynamicLightSystem;
+  private postProcess!: WaterPostProcessSystem;
   private sonar!: SonarSystem;
   private cameraTarget!: Phaser.GameObjects.Zone;
   private cameraLookAhead = 0;
@@ -60,6 +62,7 @@ export class OceanScene extends Phaser.Scene {
     this.dynamicLight = new DynamicLightSystem(this, this.cave.getCollisionBlocks());
     this.bubbles = new BubbleSystem(this);
     this.impacts = new ImpactEffectSystem(this);
+    this.postProcess = new WaterPostProcessSystem(this);
     this.controls = new InputController(this);
     this.debugOverlay = new DebugOverlay(this);
 
@@ -156,6 +159,7 @@ export class OceanScene extends Phaser.Scene {
     this.sonar.update(delta);
     this.depthSystem.update(this.submarine.y);
     this.dynamicLight.update(this.submarine, delta, this.depthSystem.depth);
+    this.postProcess.update(delta, this.depthSystem.depth);
     this.updateCameraLookAhead(delta);
     this.debugOverlay.update(delta, this.game.loop.actualFps);
   }
