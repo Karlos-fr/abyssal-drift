@@ -157,6 +157,13 @@ export class OceanScene extends Phaser.Scene {
       hitHorizontal,
       hitVertical,
     );
+    this.submarine.triggerImpact(
+      normalized,
+      hitHorizontal,
+      hitVertical,
+    );
+    this.dynamicLight.triggerImpact(normalized);
+    this.debugOverlay.triggerImpact(normalized);
     this.audio.playImpact(impactStrength);
     this.bubbles.burstAt(
       this.submarine.x,
