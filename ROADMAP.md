@@ -199,15 +199,15 @@ A still screenshot already reads as retro-modern underwater exploration.
 
 - [x] Front light.
 - [x] Semi-transparent cone.
-- [ ] Slight delayed follow.
+- [x] Slight delayed follow.
 - [x] Tiny beam movement.
 - [x] Depth-dependent intensity.
 - [x] Lamp halo.
 - [x] Very subtle flicker.
 - [x] Additive blend test.
-- [ ] Darkness mask / RenderTexture test.
+- [x] Darkness mask / RenderTexture test.
 - [x] Simple scenery occlusion if worthwhile.
-- [ ] Particles visible inside the beam.
+- [x] Particles visible inside the beam.
 
 ---
 
