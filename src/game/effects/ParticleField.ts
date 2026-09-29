@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
+import type { DynamicLightSystem } from './DynamicLightSystem';
 import type { Submarine } from '../submarine/Submarine';
 import type { SubmarineMotion } from '../submarine/SubmarinePhysics';
 
@@ -8,6 +9,7 @@ interface WaterParticle {
   velocityX: number;
   velocityY: number;
   layer: number;
+  baseAlpha: number;
 }
 
 const PARTICLE_COUNT = 150;
@@ -41,6 +43,7 @@ export class ParticleField {
         velocityX: this.random.realInRange(-1.2, 1.2) * (layer + 1),
         velocityY: this.random.realInRange(-1.4, -0.25) * (layer + 1) * 0.45,
         layer,
+        baseAlpha: alpha,
       });
     }
   }
@@ -49,6 +52,7 @@ export class ParticleField {
     submarine: Submarine,
     motion: SubmarineMotion,
     deltaMs: number,
+    lighting?: DynamicLightSystem,
   ): void {
     const deltaSeconds = Math.min(deltaMs / 1_000, 1 / 20);
 
@@ -69,6 +73,18 @@ export class ParticleField {
           motion.velocityX * influence * layerInfluence * deltaSeconds;
         particle.sprite.y -=
           motion.velocityY * influence * layerInfluence * deltaSeconds;
+      }
+
+      if (lighting) {
+        const light = lighting.getLightAmountAt(
+          particle.sprite.x,
+          particle.sprite.y,
+          submarine,
+        );
+        particle.sprite.setAlpha(
+          Phaser.Math.Clamp(particle.baseAlpha + light * 0.55, 0, 0.72),
+        );
+        particle.sprite.setScale(1 + light * 0.32);
       }
 
       this.wrap(particle.sprite);
