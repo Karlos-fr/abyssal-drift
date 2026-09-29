@@ -11,6 +11,7 @@ const HORIZONTAL_ACCELERATION = 78;
 const VERTICAL_ACCELERATION = 62;
 const HORIZONTAL_DRAG = 0.82;
 const VERTICAL_DRAG = 1.35;
+const INPUT_RESPONSE = 6.5;
 const BUOYANCY = -3.2;
 const MAX_HORIZONTAL_SPEED = 72;
 const MAX_VERTICAL_SPEED = 48;
@@ -21,10 +22,26 @@ export class SubmarinePhysics {
   private velocityX = 0;
   private velocityY = 0;
   private pitch = 0;
+  private smoothedInputX = 0;
+  private smoothedInputY = 0;
 
   public step(input: MovementInput, deltaSeconds: number): SubmarineMotion {
-    this.velocityX += input.horizontal * HORIZONTAL_ACCELERATION * deltaSeconds;
-    this.velocityY += input.vertical * VERTICAL_ACCELERATION * deltaSeconds;
+    const inputBlend = 1 - Math.exp(-INPUT_RESPONSE * deltaSeconds);
+    this.smoothedInputX = Phaser.Math.Linear(
+      this.smoothedInputX,
+      input.horizontal,
+      inputBlend,
+    );
+    this.smoothedInputY = Phaser.Math.Linear(
+      this.smoothedInputY,
+      input.vertical,
+      inputBlend,
+    );
+
+    this.velocityX +=
+      this.smoothedInputX * HORIZONTAL_ACCELERATION * deltaSeconds;
+    this.velocityY +=
+      this.smoothedInputY * VERTICAL_ACCELERATION * deltaSeconds;
     this.velocityY += BUOYANCY * deltaSeconds;
 
     this.velocityX *= Math.exp(-HORIZONTAL_DRAG * deltaSeconds);
@@ -51,10 +68,12 @@ export class SubmarinePhysics {
   ): SubmarineMotion {
     if (hitHorizontal) {
       this.velocityX *= -COLLISION_REBOUND;
+      this.smoothedInputX *= 0.35;
     }
 
     if (hitVertical) {
       this.velocityY *= -COLLISION_REBOUND;
+      this.smoothedInputY *= 0.35;
     }
 
     return this.snapshot();
