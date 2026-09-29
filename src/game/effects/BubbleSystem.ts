@@ -110,6 +110,39 @@ export class BubbleSystem {
     }
   }
 
+  public burstAt(x: number, y: number, count: number): void {
+    let emitted = 0;
+
+    for (const bubble of this.pool) {
+      if (bubble.active) {
+        continue;
+      }
+
+      const size = this.random.realInRange(1.5, 3.2);
+      bubble.active = true;
+      bubble.age = 0;
+      bubble.lifetime = this.random.realInRange(1.1, 2.4);
+      bubble.baseScale = size;
+      bubble.wobblePhase = this.random.realInRange(0, Math.PI * 2);
+      bubble.wobbleSpeed = this.random.realInRange(4, 8);
+      bubble.velocityX = this.random.realInRange(-24, 24);
+      bubble.velocityY = -this.random.realInRange(18, 38);
+      bubble.sprite
+        .setPosition(
+          x + this.random.realInRange(-5, 5),
+          y + this.random.realInRange(-5, 5),
+        )
+        .setScale(size)
+        .setAlpha(this.random.realInRange(0.38, 0.62))
+        .setVisible(true);
+
+      emitted += 1;
+      if (emitted >= count) {
+        break;
+      }
+    }
+  }
+
   private spawn(
     submarine: Submarine,
     motion: SubmarineMotion,
