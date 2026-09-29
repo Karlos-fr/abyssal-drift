@@ -64,14 +64,16 @@ export class OceanScene extends Phaser.Scene {
     camera.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     camera.startFollow(this.cameraTarget, true, 0.08, 0.08);
 
-    this.add
-      .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD · MOVE   SPACE · SONAR', {
-        fontFamily: 'monospace',
-        fontSize: '7px',
-        color: '#76aeb7',
-      })
-      .setScrollFactor(0)
-      .setDepth(1_000);
+    if (!this.controls.isTouchEnabled) {
+      this.add
+        .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD · MOVE   SPACE · SONAR', {
+          fontFamily: 'monospace',
+          fontSize: '7px',
+          color: '#76aeb7',
+        })
+        .setScrollFactor(0)
+        .setDepth(1_000);
+    }
   }
 
   public update(_time: number, delta: number): void {
