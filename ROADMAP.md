@@ -170,7 +170,7 @@ Bubbles strongly reinforce motion and depth without harming frame rate.
 # Phase 5 — Underwater atmosphere
 
 ## Background
-- [ ] Vertical water gradient.
+- [x] Vertical water gradient.
 - [ ] Multiple scenery layers.
 - [ ] Slow parallax.
 - [ ] Rock silhouettes.
@@ -178,11 +178,11 @@ Bubbles strongly reinforce motion and depth without harming frame rate.
 - [ ] Floating debris.
 
 ## Particles
-- [ ] Create ParticleField.
-- [ ] Suspended underwater dust.
-- [ ] Several depth layers.
-- [ ] Different layer speeds.
-- [ ] Slight response to submarine movement.
+- [x] Create ParticleField.
+- [x] Suspended underwater dust.
+- [x] Several depth layers.
+- [x] Different layer speeds.
+- [x] Slight response to submarine movement.
 
 ## Surface light
 - [ ] Stylized light rays.
@@ -197,14 +197,14 @@ A still screenshot already reads as retro-modern underwater exploration.
 
 # Phase 6 — Submarine headlight
 
-- [ ] Front light.
-- [ ] Semi-transparent cone.
+- [x] Front light.
+- [x] Semi-transparent cone.
 - [ ] Slight delayed follow.
-- [ ] Tiny beam movement.
+- [x] Tiny beam movement.
 - [ ] Depth-dependent intensity.
-- [ ] Lamp halo.
-- [ ] Very subtle flicker.
-- [ ] Additive blend test.
+- [x] Lamp halo.
+- [x] Very subtle flicker.
+- [x] Additive blend test.
 - [ ] Darkness mask / RenderTexture test.
 - [ ] Simple scenery occlusion if worthwhile.
 - [ ] Particles visible inside the beam.
@@ -216,17 +216,17 @@ A still screenshot already reads as retro-modern underwater exploration.
 ## Goal
 Create a simple mechanic with strong audiovisual identity.
 
-- [ ] Create SonarSystem.
-- [ ] Cooldown.
-- [ ] Expanding pulse.
-- [ ] Alpha fade.
+- [x] Create SonarSystem.
+- [x] Cooldown.
+- [x] Expanding pulse.
+- [x] Alpha fade.
 - [ ] Sonar audio.
-- [ ] Small submarine flash.
-- [ ] Temporary object reveal.
-- [ ] Highlight scenery or interesting objects.
-- [ ] Detection feedback.
-- [ ] Tiny camera response.
-- [ ] Implement without shaders first.
+- [x] Small submarine flash.
+- [x] Temporary object reveal.
+- [x] Highlight scenery or interesting objects.
+- [x] Detection feedback.
+- [x] Tiny camera response.
+- [x] Implement without shaders first.
 - [ ] Consider shader enhancement later.
 
 ---
@@ -581,9 +581,9 @@ Do not prioritize advanced shaders over movement and readability.
 - [x] collisions;
 - [x] animated propeller;
 - [x] bubbles;
-- [ ] suspended particles;
-- [ ] headlight;
-- [ ] sonar;
+- [x] suspended particles;
+- [x] headlight;
+- [x] sonar;
 - [ ] screen shake;
 - [ ] engine audio;
 - [ ] sonar audio;
