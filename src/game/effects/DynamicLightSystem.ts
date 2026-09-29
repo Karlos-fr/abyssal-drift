@@ -19,6 +19,7 @@ export class DynamicLightSystem {
   private readonly darkness: Phaser.GameObjects.Rectangle;
   private timeSeconds = 0;
   private beamAngle = 0;
+  private impactDisturbance = 0;
 
   public constructor(
     scene: Phaser.Scene,
@@ -58,9 +59,18 @@ export class DynamicLightSystem {
 
     const originX = submarine.x + Math.cos(submarine.rotation) * 17;
     const originY = submarine.y + Math.sin(submarine.rotation) * 17 - 1;
-    const drift = Math.sin(this.timeSeconds * 0.8) * 0.012;
+    this.impactDisturbance = Phaser.Math.Linear(
+      this.impactDisturbance,
+      0,
+      1 - Math.exp(-7 * deltaSeconds),
+    );
+
+    const drift =
+      Math.sin(this.timeSeconds * 0.8) * 0.012 +
+      Math.sin(this.timeSeconds * 39) * this.impactDisturbance;
     const centerAngle = this.beamAngle + drift;
-    const depthBoost = 0.75 + depth * 0.35;
+    const depthBoost =
+      (0.75 + depth * 0.35) * (1 - Math.abs(this.impactDisturbance) * 2.5);
 
     this.darkness.setAlpha(0.06 + depth * 0.18);
 
@@ -99,6 +109,14 @@ export class DynamicLightSystem {
     this.glow.fillCircle(originX, originY, 7.5);
     this.glow.fillStyle(0xbdfaff, (0.05 + flicker * 0.3) * depthBoost);
     this.glow.fillCircle(originX, originY, 13);
+  }
+
+  public triggerImpact(strength: number): void {
+    const normalized = Phaser.Math.Clamp(strength, 0, 1);
+    this.impactDisturbance = Math.max(
+      this.impactDisturbance,
+      0.012 + normalized * 0.04,
+    );
   }
 
   public getLightAmountAt(x: number, y: number, submarine: Submarine): number {
