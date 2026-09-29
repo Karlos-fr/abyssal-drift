@@ -9,7 +9,7 @@ interface ImpactParticle {
   lifetime: number;
 }
 
-const PARTICLE_COUNT = 28;
+const PARTICLE_COUNT = 18;
 
 export class ImpactEffectSystem {
   private readonly particles: ImpactParticle[] = [];
@@ -24,7 +24,7 @@ export class ImpactEffectSystem {
 
     for (let index = 0; index < PARTICLE_COUNT; index += 1) {
       const sprite = scene.add
-        .rectangle(0, 0, 2, 1, 0xb8d6d2, 0.8)
+        .rectangle(0, 0, 1.5, 1, 0x9bc7ca, 0.55)
         .setDepth(44)
         .setVisible(false);
 
@@ -47,7 +47,7 @@ export class ImpactEffectSystem {
     hitVertical: boolean,
   ): void {
     const strength = Phaser.Math.Clamp(impactStrength / 72, 0.15, 1);
-    const count = Math.round(4 + strength * 10);
+    const count = Math.round(2 + strength * 5);
 
     this.flash
       .setPosition(x, y)
@@ -62,9 +62,9 @@ export class ImpactEffectSystem {
       }
 
       const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-      const speed = Phaser.Math.FloatBetween(14, 30 + strength * 36);
-      const normalBiasX = hitHorizontal ? Phaser.Math.RND.sign() * 18 : 0;
-      const normalBiasY = hitVertical ? Phaser.Math.RND.sign() * 18 : 0;
+      const speed = Phaser.Math.FloatBetween(9, 18 + strength * 22);
+      const normalBiasX = hitHorizontal ? Phaser.Math.RND.sign() * 8 : 0;
+      const normalBiasY = hitVertical ? Phaser.Math.RND.sign() * 8 : 0;
 
       particle.active = true;
       particle.age = 0;
@@ -78,7 +78,7 @@ export class ImpactEffectSystem {
         )
         .setRotation(angle)
         .setScale(0.7 + strength * 0.8)
-        .setAlpha(0.45 + strength * 0.45)
+        .setAlpha(0.25 + strength * 0.35)
         .setVisible(true);
 
       emitted += 1;
