@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import type Phaser from 'phaser';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
 
 interface LightRay {
