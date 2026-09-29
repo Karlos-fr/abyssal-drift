@@ -189,5 +189,10 @@ export class TouchControls {
     this.scene.input.off('pointerdown', this.handlePointerDown);
     this.scene.input.off('pointermove', this.handlePointerMove);
     this.scene.input.off('pointerup', this.handlePointerUp);
+
+    this.base?.destroy();
+    this.knob?.destroy();
+    this.sonarButton?.destroy();
+    this.sonarLabel?.destroy();
   }
 }
