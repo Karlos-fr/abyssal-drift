@@ -15,20 +15,28 @@ interface BubbleState {
   wobbleSpeed: number;
 }
 
-const DEFAULT_POOL_SIZE = 120;
-const MAX_HORIZONTAL_SPEED = 72;
+interface AmbientVent {
+  x: number;
+  y: number;
+  rate: number;
+  budget: number;
+}
 
-/**
- * Pooled bubble wake used by the submarine.
- *
- * Shapes are intentionally generated at runtime during the prototype stage:
- * this keeps the effect cheap, transparent and independent from final art.
- */
+const DEFAULT_POOL_SIZE = 150;
+const MAX_HORIZONTAL_SPEED = 72;
+const SURFACE_Y = 62;
+
 export class BubbleSystem {
   private readonly pool: BubbleState[] = [];
   private readonly random = new Phaser.Math.RandomDataGenerator([
     'abyssal-drift-bubbles',
   ]);
+  private readonly vents: AmbientVent[] = [
+    { x: 455, y: 806, rate: 0.75, budget: 0 },
+    { x: 1_015, y: 805, rate: 1.05, budget: 0 },
+    { x: 1_455, y: 478, rate: 0.65, budget: 0 },
+    { x: 1_735, y: 806, rate: 0.9, budget: 0 },
+  ];
   private emissionBudget = 0;
 
   public constructor(scene: Phaser.Scene, poolSize = DEFAULT_POOL_SIZE) {
@@ -65,14 +73,15 @@ export class BubbleSystem {
       1,
     );
 
-    // A tiny idle trail keeps the vessel alive; thrust adds a dense wake.
     const bubblesPerSecond = 1.5 + speedRatio * 18;
     this.emissionBudget += bubblesPerSecond * deltaSeconds;
 
     while (this.emissionBudget >= 1) {
       this.emissionBudget -= 1;
-      this.spawn(submarine, motion, speedRatio);
+      this.spawnWake(submarine, motion, speedRatio);
     }
+
+    this.updateAmbientVents(deltaSeconds);
 
     for (const bubble of this.pool) {
       if (!bubble.active) {
@@ -80,11 +89,25 @@ export class BubbleSystem {
       }
 
       bubble.age += deltaSeconds;
+
+      // Bubbles reaching the waterline flatten, expand and fade before being
+      // returned to the pool, suggesting a small surface pop without particles.
+      if (bubble.sprite.y <= SURFACE_Y) {
+        bubble.sprite.y = SURFACE_Y;
+        bubble.sprite.scaleX *= 1.08;
+        bubble.sprite.scaleY *= 0.72;
+        bubble.sprite.alpha *= 0.72;
+
+        if (bubble.sprite.alpha < 0.035) {
+          this.release(bubble);
+        }
+        continue;
+      }
+
       if (
         bubble.age >= bubble.lifetime ||
         bubble.sprite.x < 0 ||
         bubble.sprite.x > WORLD_WIDTH ||
-        bubble.sprite.y < 0 ||
         bubble.sprite.y > WORLD_HEIGHT
       ) {
         this.release(bubble);
@@ -118,23 +141,15 @@ export class BubbleSystem {
         continue;
       }
 
-      const size = this.random.realInRange(1.5, 3.2);
-      bubble.active = true;
-      bubble.age = 0;
-      bubble.lifetime = this.random.realInRange(1.1, 2.4);
-      bubble.baseScale = size;
-      bubble.wobblePhase = this.random.realInRange(0, Math.PI * 2);
-      bubble.wobbleSpeed = this.random.realInRange(4, 8);
-      bubble.velocityX = this.random.realInRange(-24, 24);
-      bubble.velocityY = -this.random.realInRange(18, 38);
-      bubble.sprite
-        .setPosition(
-          x + this.random.realInRange(-5, 5),
-          y + this.random.realInRange(-5, 5),
-        )
-        .setScale(size)
-        .setAlpha(this.random.realInRange(0.38, 0.62))
-        .setVisible(true);
+      this.activateBubble(
+        bubble,
+        x + this.random.realInRange(-5, 5),
+        y + this.random.realInRange(-5, 5),
+        this.random.realInRange(1.5, 3.2),
+        this.random.realInRange(-24, 24),
+        -this.random.realInRange(18, 38),
+        this.random.realInRange(1.1, 2.4),
+      );
 
       emitted += 1;
       if (emitted >= count) {
@@ -143,7 +158,31 @@ export class BubbleSystem {
     }
   }
 
-  private spawn(
+  private updateAmbientVents(deltaSeconds: number): void {
+    for (const vent of this.vents) {
+      vent.budget += vent.rate * deltaSeconds;
+
+      while (vent.budget >= 1) {
+        vent.budget -= 1;
+        const bubble = this.pool.find((candidate) => !candidate.active);
+        if (!bubble) {
+          return;
+        }
+
+        this.activateBubble(
+          bubble,
+          vent.x + this.random.realInRange(-5, 5),
+          vent.y + this.random.realInRange(-2, 2),
+          this.random.realInRange(0.55, 1.45),
+          this.random.realInRange(-2.2, 2.2),
+          -this.random.realInRange(8, 14),
+          this.random.realInRange(8, 15),
+        );
+      }
+    }
+  }
+
+  private spawnWake(
     submarine: Submarine,
     motion: SubmarineMotion,
     speedRatio: number,
@@ -153,30 +192,40 @@ export class BubbleSystem {
       return;
     }
 
-    const facing = submarine.facingDirection;
     const size = this.random.realInRange(0.7, 2.25);
+    this.activateBubble(
+      bubble,
+      submarine.x - 28 + this.random.realInRange(-2, 2),
+      submarine.y + this.random.realInRange(-4, 4),
+      size,
+      -this.random.realInRange(7, 13 + speedRatio * 20) +
+        this.random.realInRange(-3, 3),
+      -this.random.realInRange(10, 19) + motion.velocityY * 0.08,
+      this.random.realInRange(1.5, 3.6),
+    );
+  }
 
+  private activateBubble(
+    bubble: BubbleState,
+    x: number,
+    y: number,
+    size: number,
+    velocityX: number,
+    velocityY: number,
+    lifetime: number,
+  ): void {
     bubble.active = true;
     bubble.age = 0;
-    bubble.lifetime = this.random.realInRange(1.5, 3.6);
+    bubble.lifetime = lifetime;
     bubble.baseScale = size;
     bubble.wobblePhase = this.random.realInRange(0, Math.PI * 2);
-    bubble.wobbleSpeed = this.random.realInRange(3.5, 6.5);
-    bubble.velocityX =
-      -facing * this.random.realInRange(7, 13 + speedRatio * 20) +
-      this.random.realInRange(-3, 3);
-
-    // Vertical vessel motion slightly bends the wake before buoyancy takes over.
-    bubble.velocityY =
-      -this.random.realInRange(10, 19) + motion.velocityY * 0.08;
-
+    bubble.wobbleSpeed = this.random.realInRange(3.5, 7);
+    bubble.velocityX = velocityX;
+    bubble.velocityY = velocityY;
     bubble.sprite
-      .setPosition(
-        submarine.x - facing * 21 + this.random.realInRange(-2, 2),
-        submarine.y + this.random.realInRange(-4, 4),
-      )
+      .setPosition(x, y)
       .setScale(size)
-      .setAlpha(this.random.realInRange(0.28, 0.52))
+      .setAlpha(this.random.realInRange(0.25, 0.55))
       .setVisible(true);
   }
 
