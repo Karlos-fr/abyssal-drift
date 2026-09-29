@@ -15,6 +15,7 @@ import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
 import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
+import { MarineLifeSystem } from '../ocean/MarineLifeSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
 
@@ -26,6 +27,7 @@ export class OceanScene extends Phaser.Scene {
   private cave!: CaveSystem;
   private depthSystem!: DepthSystem;
   private ambience!: OceanAmbienceSystem;
+  private marineLife!: MarineLifeSystem;
   private bubbles!: BubbleSystem;
   private particles!: ParticleField;
   private impacts!: ImpactEffectSystem;
@@ -44,6 +46,7 @@ export class OceanScene extends Phaser.Scene {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
     this.ambience = new OceanAmbienceSystem(this);
+    this.marineLife = new MarineLifeSystem(this);
 
     this.audio = new AudioSystem();
     this.particles = new ParticleField(this);
@@ -124,9 +127,11 @@ export class OceanScene extends Phaser.Scene {
     ) {
       this.cameras.main.shake(65, 0.0012);
       this.audio.playSonar(this.depthSystem.depth);
+      this.marineLife.triggerSonar();
     }
 
     this.ambience.update(delta);
+    this.marineLife.update(this.submarine, this.dynamicLight, delta);
     this.audio.updateEngine(this.submarine.motion, this.depthSystem.depth);
     this.audio.updateDepth(delta, this.depthSystem.depth);
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
