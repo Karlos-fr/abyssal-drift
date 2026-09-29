@@ -141,6 +141,14 @@ export class Submarine extends Phaser.GameObjects.Container {
     return this.currentMotion;
   }
 
+  public triggerImpact(
+    strength: number,
+    hitHorizontal: boolean,
+    hitVertical: boolean,
+  ): void {
+    this.effects.triggerImpact(strength, hitHorizontal, hitVertical);
+  }
+
   public resolveCollision(
     x: number,
     y: number,
