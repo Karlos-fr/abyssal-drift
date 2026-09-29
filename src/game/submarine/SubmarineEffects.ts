@@ -4,6 +4,8 @@ export class SubmarineEffects {
   private recoil = 0;
   private overshoot = 0;
   private previousThrust = 0;
+  private impactKick = 0;
+  private impactRoll = 0;
 
   public constructor(
     private readonly vessel: Phaser.GameObjects.Container,
@@ -41,17 +43,45 @@ export class SubmarineEffects {
       1 - Math.exp(-6.5 * deltaSeconds),
     );
 
-    this.visualBody.setPosition(
-      Phaser.Math.Clamp(this.recoil, -1.8, 1.8),
+    this.impactKick = Phaser.Math.Linear(
+      this.impactKick,
       0,
+      1 - Math.exp(-10 * deltaSeconds),
+    );
+    this.impactRoll = Phaser.Math.Linear(
+      this.impactRoll,
+      0,
+      1 - Math.exp(-8 * deltaSeconds),
+    );
+
+    this.visualBody.setPosition(
+      Phaser.Math.Clamp(this.recoil + this.impactKick, -3.2, 3.2),
+      Math.sin(timeSeconds * 42) * Math.abs(this.impactRoll) * 0.7,
     );
     this.visualBody.setRotation(
-      Phaser.Math.Clamp(this.overshoot, -0.025, 0.025),
+      Phaser.Math.Clamp(
+        this.overshoot + this.impactRoll,
+        -0.065,
+        0.065,
+      ),
     );
 
     const flicker =
       Math.sin(timeSeconds * 11.7) * 0.018 +
       Math.sin(timeSeconds * 23.3) * 0.009;
     this.headlightHalo.setAlpha(0.11 + flicker);
+  }
+
+  public triggerImpact(
+    strength: number,
+    hitHorizontal: boolean,
+    hitVertical: boolean,
+  ): void {
+    const normalized = Phaser.Math.Clamp(strength, 0, 1);
+    this.impactKick +=
+      (hitHorizontal ? -1 : 0) * (0.8 + normalized * 1.8);
+    this.impactRoll +=
+      (hitVertical ? Phaser.Math.RND.sign() : Phaser.Math.RND.sign() * 0.45) *
+      (0.012 + normalized * 0.035);
   }
 }
