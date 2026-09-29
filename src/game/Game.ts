@@ -17,7 +17,10 @@ export function createGame(): Phaser.Game {
       antialias: false,
     },
     scale: {
-      mode: Phaser.Scale.FIT,
+      // EXPAND fills the browser viewport while keeping the logical game
+      // coordinates at 480x270. The camera gains a little extra visible area
+      // on non-16:9 screens instead of letterboxing the game.
+      mode: Phaser.Scale.EXPAND,
       autoCenter: Phaser.Scale.CENTER_BOTH,
       width: GAME_WIDTH,
       height: GAME_HEIGHT,
