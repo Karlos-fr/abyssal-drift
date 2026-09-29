@@ -55,12 +55,7 @@ export class OceanScene extends Phaser.Scene {
     const stripeHeight = 24;
     for (let y = 0; y < WORLD_HEIGHT; y += stripeHeight) {
       const t = y / WORLD_HEIGHT;
-      const color = Phaser.Display.Color.Interpolate.ColorWithColor(
-        { r: 8, g: 63, b: 77 },
-        { r: 1, g: 8, b: 18 },
-        1,
-        t,
-      );
+      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(8, 63, 77, 1, 8, 18, 1, t);
       background.fillStyle(
         Phaser.Display.Color.GetColor(color.r, color.g, color.b),
         1,
