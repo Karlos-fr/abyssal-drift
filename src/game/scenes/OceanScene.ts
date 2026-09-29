@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { AudioSystem } from '../audio/AudioSystem';
 import {
   GAME_HEIGHT,
   SceneKey,
@@ -16,6 +17,7 @@ import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
 
 export class OceanScene extends Phaser.Scene {
+  private audio!: AudioSystem;
   private submarine!: Submarine;
   private controls!: InputController;
   private debugOverlay!: DebugOverlay;
@@ -36,6 +38,7 @@ export class OceanScene extends Phaser.Scene {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
 
+    this.audio = new AudioSystem();
     this.particles = new ParticleField(this);
     this.cave = new CaveSystem(this, WORLD_WIDTH, WORLD_HEIGHT);
     this.depthSystem = new DepthSystem(this);
@@ -45,6 +48,10 @@ export class OceanScene extends Phaser.Scene {
     this.impacts = new ImpactEffectSystem(this);
     this.controls = new InputController(this);
     this.debugOverlay = new DebugOverlay(this);
+
+    this.input.keyboard?.once('keydown', () => this.audio.unlock());
+    this.input.once('pointerdown', () => this.audio.unlock());
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.audio.dispose());
 
     this.cameraTarget = this.add.zone(
       this.submarine.x,
@@ -106,8 +113,10 @@ export class OceanScene extends Phaser.Scene {
       this.sonar.trigger(this.submarine.x, this.submarine.y)
     ) {
       this.cameras.main.shake(65, 0.0012);
+      this.audio.playSonar();
     }
 
+    this.audio.updateEngine(this.submarine.motion);
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
     this.particles.update(this.submarine, this.submarine.motion, delta);
     this.impacts.update(delta);
@@ -131,6 +140,7 @@ export class OceanScene extends Phaser.Scene {
       hitHorizontal,
       hitVertical,
     );
+    this.audio.playImpact(impactStrength);
     this.bubbles.burstAt(
       this.submarine.x,
       this.submarine.y,
