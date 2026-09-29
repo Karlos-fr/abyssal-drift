@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
+import { Palette } from '../core/Palette';
 import type { MovementInput } from '../input/InputController';
 import { SubmarineEffects } from './SubmarineEffects';
 import {
@@ -34,8 +35,11 @@ export class Submarine extends Phaser.GameObjects.Container {
       .circle(17, -1, 5, 0xd8fdff, 0.11);
     headlightHalo.setBlendMode(Phaser.BlendModes.ADD);
 
-    const body = scene.add.ellipse(0, 0, 34, 14, 0xb3b35f);
-    body.setStrokeStyle(2, 0x48492c, 1);
+    const shadow = scene.add.ellipse(1, 3, 35, 13, 0x101718, 0.35);
+    const body = scene.add.rectangle(0, 0, 31, 13, Palette.submarineHull, 1);
+    body.setStrokeStyle(2, Palette.submarineShade, 1);
+    const nose = scene.add.rectangle(16, 0, 5, 9, Palette.submarineHull, 1);
+    const hullHighlight = scene.add.rectangle(2, -4, 22, 2, Palette.submarineHighlight, 0.65);
 
     // Rear fairing visually joins the propeller shaft to the hull.
     const rearFairing = scene.add.triangle(
@@ -47,7 +51,7 @@ export class Submarine extends Phaser.GameObjects.Container {
       5,
       8,
       0,
-      0x8b8e4d,
+      Palette.submarineShade,
       1,
     );
     const shaft = scene.add.rectangle(-23, 0, 8, 2, 0x777d54, 1);
@@ -61,10 +65,10 @@ export class Submarine extends Phaser.GameObjects.Container {
       propellerHub,
     ]);
 
-    const belly = scene.add.rectangle(0, 5, 21, 3, 0x6f733f, 0.9);
-    const tower = scene.add.rectangle(-2, -8, 9, 5, 0x9b9d55);
-    const windowFront = scene.add.circle(8, -1, 3, 0x76d8e3, 0.9);
-    const windowRear = scene.add.circle(0, -1, 2.4, 0x6cb8c5, 0.85);
+    const belly = scene.add.rectangle(0, 5, 22, 3, Palette.submarineShade, 0.95);
+    const tower = scene.add.rectangle(-2, -8, 10, 5, Palette.submarineHull);
+    const windowFront = scene.add.rectangle(8, -1, 5, 5, Palette.glass, 0.9);
+    const windowRear = scene.add.rectangle(0, -1, 4, 4, Palette.glass, 0.8);
     const light = scene.add.circle(17, -1, 2, 0xf4f0c2, 1);
 
     this.visualBody = scene.add.container(0, 0, [
@@ -72,7 +76,10 @@ export class Submarine extends Phaser.GameObjects.Container {
       rearFairing,
       shaft,
       this.propeller,
+      shadow,
       body,
+      nose,
+      hullHighlight,
       belly,
       tower,
       windowFront,
