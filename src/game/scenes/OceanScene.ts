@@ -33,6 +33,8 @@ export class OceanScene extends Phaser.Scene {
   private sonar!: SonarSystem;
   private cameraTarget!: Phaser.GameObjects.Zone;
   private cameraLookAhead = 0;
+  private cameraThrustKick = 0;
+  private previousHorizontalVelocity = 0;
 
   public constructor() {
     super(SceneKey.Ocean);
@@ -170,8 +172,14 @@ export class OceanScene extends Phaser.Scene {
 
   private updateCameraLookAhead(deltaMs: number): void {
     const deltaSeconds = Math.min(deltaMs / 1_000, 1 / 20);
+    const velocityX = this.submarine.motion.velocityX;
+    const acceleration =
+      (velocityX - this.previousHorizontalVelocity) /
+      Math.max(deltaSeconds, 0.001);
+    this.previousHorizontalVelocity = velocityX;
+
     const targetLookAhead = Phaser.Math.Clamp(
-      this.submarine.motion.velocityX * 0.62,
+      velocityX * 0.62,
       -46,
       46,
     );
@@ -182,8 +190,21 @@ export class OceanScene extends Phaser.Scene {
       1 - Math.exp(-3.5 * deltaSeconds),
     );
 
+    // Acceleration briefly nudges framing opposite the thrust. The maximum is
+    // deliberately tiny so touch play remains comfortable.
+    this.cameraThrustKick += Phaser.Math.Clamp(
+      -acceleration * deltaSeconds * 0.045,
+      -1.4,
+      1.4,
+    );
+    this.cameraThrustKick = Phaser.Math.Linear(
+      this.cameraThrustKick,
+      0,
+      1 - Math.exp(-8 * deltaSeconds),
+    );
+
     this.cameraTarget.setPosition(
-      this.submarine.x + this.cameraLookAhead,
+      this.submarine.x + this.cameraLookAhead + this.cameraThrustKick,
       this.submarine.y + this.submarine.motion.velocityY * 0.12,
     );
   }
