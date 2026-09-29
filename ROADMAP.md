@@ -16,20 +16,20 @@ Create a reliable, lightweight development base.
 ## Tasks
 - [x] Choose project name: Abyssal Drift.
 - [x] Create GitHub repository.
-- [ ] Initialize TypeScript project.
-- [ ] Add Phaser.
-- [ ] Add Vite.
-- [ ] Add ESLint.
-- [ ] Add Prettier.
-- [ ] Add .gitignore.
-- [ ] Expand README.
-- [ ] Add AGENTS.md.
-- [ ] Set logical resolution to 480 × 270.
-- [ ] Add responsive upscale.
-- [ ] Use Phaser WebGL/automatic renderer with browser fallback.
+- [x] Initialize TypeScript project.
+- [x] Add Phaser.
+- [x] Add Vite.
+- [x] Add ESLint.
+- [x] Add Prettier.
+- [x] Add .gitignore.
+- [x] Expand README.
+- [x] Add AGENTS.md.
+- [x] Set logical resolution to 480 × 270.
+- [x] Add responsive upscale.
+- [x] Use Phaser WebGL/automatic renderer with browser fallback.
 - [ ] Verify desktop.
 - [ ] Verify mobile.
-- [ ] Display a first test scene.
+- [x] Display a first test scene.
 
 ## Done when
 npm install + npm run dev launches a 480 × 270 Phaser scene that scales cleanly.
@@ -61,16 +61,16 @@ Keep gameplay logic, presentation and effects separated from the beginning.
 - src/assets/
 
 ## Tasks
-- [ ] Create Game.ts.
-- [ ] Create BootScene.
-- [ ] Create MenuScene.
-- [ ] Create OceanScene.
+- [x] Create Game.ts.
+- [x] Create BootScene.
+- [x] Create MenuScene.
+- [x] Create OceanScene.
 - [ ] Add a simple asset strategy.
-- [ ] Add keyboard input abstraction.
+- [x] Add keyboard input abstraction.
 - [ ] Reserve a clean path for touch input.
 - [ ] Add a common update-system interface.
 - [ ] Add debug mode.
-- [ ] Add FPS display.
+- [x] Add FPS display.
 - [ ] Prepare hitbox debug display.
 
 ## Done when
@@ -89,25 +89,25 @@ Make movement pleasant before building the game around it.
 - Space: sonar later.
 
 ## Physics tasks
-- [ ] Create Submarine.
-- [ ] Create SubmarinePhysics.
-- [ ] Horizontal velocity.
-- [ ] Progressive acceleration.
-- [ ] Progressive deceleration.
-- [ ] Inertia.
-- [ ] Maximum speed.
-- [ ] Vertical velocity.
-- [ ] Light buoyancy.
-- [ ] Water drag.
+- [x] Create Submarine.
+- [x] Create SubmarinePhysics.
+- [x] Horizontal velocity.
+- [x] Progressive acceleration.
+- [x] Progressive deceleration.
+- [x] Inertia.
+- [x] Maximum speed.
+- [x] Vertical velocity.
+- [x] Light buoyancy.
+- [x] Water drag.
 - [ ] Smooth acceleration limits.
-- [ ] Pitch following vertical movement.
+- [x] Pitch following vertical movement.
 - [ ] Small response lag / smoothing.
-- [ ] Keep the submarine inside the playable area.
+- [x] Keep the submarine inside the playable area.
 
 ## Input tasks
-- [ ] Arrow keys.
-- [ ] AZERTY ZQSD.
-- [ ] QWERTY WASD.
+- [x] Arrow keys.
+- [x] AZERTY ZQSD.
+- [x] QWERTY WASD.
 - [ ] Gamepad.
 - [ ] Touch-control abstraction.
 - [ ] Remapping later if useful.
@@ -130,8 +130,8 @@ Create a compact playground for the core mechanics.
 - [ ] One open chamber.
 - [ ] Obstacles.
 - [ ] Shallow and deep zones.
-- [ ] Camera bounds.
-- [ ] Smooth camera follow.
+- [x] Camera bounds.
+- [x] Smooth camera follow.
 - [ ] Look-ahead in movement direction.
 
 ## Done when
@@ -234,8 +234,8 @@ Create a simple mechanic with strong audiovisual identity.
 # Phase 8 — Movement juiciness
 
 ## Propulsion
-- [ ] Animate propeller.
-- [ ] Propeller speed follows thrust.
+- [x] Animate propeller.
+- [x] Propeller speed follows thrust.
 - [ ] Tiny visual recoil.
 - [ ] Engine vibration.
 - [ ] Very light camera feedback.
@@ -250,9 +250,9 @@ Create a simple mechanic with strong audiovisual identity.
 - [ ] Bubble response.
 
 ## Vertical movement
-- [ ] Adjust submarine attitude.
+- [x] Adjust submarine attitude.
 - [ ] Adjust bubble behaviour.
-- [ ] Preserve readable vertical inertia.
+- [x] Preserve readable vertical inertia.
 
 ---
 
@@ -572,14 +572,14 @@ Do not prioritize advanced shaders over movement and readability.
 # First milestone — "The submarine is already fun"
 
 ## Must contain
-- [ ] underwater scene;
-- [ ] controllable submarine;
-- [ ] inertia;
-- [ ] buoyancy;
-- [ ] camera;
+- [x] underwater scene;
+- [x] controllable submarine;
+- [x] inertia;
+- [x] buoyancy;
+- [x] camera;
 - [ ] simple cave;
 - [ ] collisions;
-- [ ] animated propeller;
+- [x] animated propeller;
 - [ ] bubbles;
 - [ ] suspended particles;
 - [ ] headlight;
