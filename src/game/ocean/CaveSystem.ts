@@ -7,7 +7,7 @@ export interface CaveCollisionResult {
   hitVertical: boolean;
 }
 
-interface CaveBlock {
+export interface CaveBlock {
   x: number;
   y: number;
   width: number;
@@ -31,6 +31,10 @@ export class CaveSystem {
   ) {
     this.blocks = this.createLayout(worldWidth, worldHeight);
     this.draw(scene);
+  }
+
+  public getCollisionBlocks(): readonly CaveBlock[] {
+    return this.blocks;
   }
 
   public resolve(
