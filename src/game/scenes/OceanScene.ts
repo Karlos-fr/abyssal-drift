@@ -37,6 +37,7 @@ export class OceanScene extends Phaser.Scene {
   private cameraLookAhead = 0;
   private cameraThrustKick = 0;
   private previousHorizontalVelocity = 0;
+  private previousVerticalInput = 0;
 
   public constructor() {
     super(SceneKey.Ocean);
@@ -89,6 +90,13 @@ export class OceanScene extends Phaser.Scene {
 
   public update(_time: number, delta: number): void {
     const movement = this.controls.readMovement();
+    if (
+      Math.abs(movement.vertical) > 0.35 &&
+      Math.abs(this.previousVerticalInput) <= 0.35
+    ) {
+      this.audio.playBallast(movement.vertical);
+    }
+    this.previousVerticalInput = movement.vertical;
     this.submarine.updateFromInput(movement, delta);
 
     const preCollisionMotion = this.submarine.motion;
