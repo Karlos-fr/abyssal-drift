@@ -157,7 +157,7 @@ Make bubbles one of the game's visual signatures.
 - [x] Subtle deformation.
 - [x] Cleanup outside active area.
 - [x] Object pooling.
-- [ ] Large impact bubbles.
+- [x] Large impact bubbles.
 - [ ] Ambient bubbles from scenery.
 - [ ] Surface pop when relevant.
 - [x] Configurable particle cap.
@@ -258,14 +258,14 @@ Create a simple mechanic with strong audiovisual identity.
 
 # Phase 9 — Collisions and impacts
 
-- [ ] Measure impact strength.
-- [ ] Scale reaction by speed.
+- [x] Measure impact strength.
+- [x] Scale reaction by speed.
 - [x] Small rebound.
-- [ ] Screen shake.
-- [ ] Very short flash.
+- [x] Screen shake.
+- [x] Very short flash.
 - [ ] Metallic sound.
-- [ ] Bubble burst.
-- [ ] Small debris.
+- [x] Bubble burst.
+- [x] Small debris.
 - [ ] Optional sparks.
 - [ ] Submarine impact animation.
 - [ ] Temporary headlight disturbance.
@@ -278,10 +278,10 @@ Create a simple mechanic with strong audiovisual identity.
 Create a normalized depth value from 0.0 near the surface to 1.0 at maximum depth.
 
 ## Visual
-- [ ] Darken environment with depth.
+- [x] Darken environment with depth.
 - [ ] Remove warm colors progressively.
-- [ ] Increase haze.
-- [ ] Reduce visibility.
+- [x] Increase haze.
+- [x] Reduce visibility.
 - [ ] Increase importance of the headlight.
 - [ ] Change particle density.
 
@@ -584,10 +584,10 @@ Do not prioritize advanced shaders over movement and readability.
 - [x] suspended particles;
 - [x] headlight;
 - [x] sonar;
-- [ ] screen shake;
+- [x] screen shake;
 - [ ] engine audio;
 - [ ] sonar audio;
-- [ ] wall-impact feedback.
+- [x] wall-impact feedback.
 
 ## Explicitly excluded
 - enemies;
