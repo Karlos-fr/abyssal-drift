@@ -123,17 +123,19 @@ export class OceanScene extends Phaser.Scene {
       this.sonar.trigger(this.submarine.x, this.submarine.y)
     ) {
       this.cameras.main.shake(65, 0.0012);
-      this.audio.playSonar();
+      this.audio.playSonar(this.depthSystem.depth);
     }
 
     this.ambience.update(delta);
-    this.audio.updateEngine(this.submarine.motion);
+    this.audio.updateEngine(this.submarine.motion, this.depthSystem.depth);
+    this.audio.updateDepth(delta, this.depthSystem.depth);
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
     this.particles.update(
       this.submarine,
       this.submarine.motion,
       delta,
       this.dynamicLight,
+      this.depthSystem.depth,
     );
     this.impacts.update(delta);
     this.sonar.update(delta);
