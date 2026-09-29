@@ -14,6 +14,7 @@ import { ParticleField } from '../effects/ParticleField';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
+import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
 
@@ -24,6 +25,7 @@ export class OceanScene extends Phaser.Scene {
   private debugOverlay!: DebugOverlay;
   private cave!: CaveSystem;
   private depthSystem!: DepthSystem;
+  private ambience!: OceanAmbienceSystem;
   private bubbles!: BubbleSystem;
   private particles!: ParticleField;
   private impacts!: ImpactEffectSystem;
@@ -39,6 +41,7 @@ export class OceanScene extends Phaser.Scene {
   public create(): void {
     this.cameras.main.fadeIn(220, 2, 11, 22);
     this.createOceanBackdrop();
+    this.ambience = new OceanAmbienceSystem(this);
 
     this.audio = new AudioSystem();
     this.particles = new ParticleField(this);
@@ -121,6 +124,7 @@ export class OceanScene extends Phaser.Scene {
       this.audio.playSonar();
     }
 
+    this.ambience.update(delta);
     this.audio.updateEngine(this.submarine.motion);
     this.bubbles.update(this.submarine, this.submarine.motion, delta);
     this.particles.update(this.submarine, this.submarine.motion, delta);
