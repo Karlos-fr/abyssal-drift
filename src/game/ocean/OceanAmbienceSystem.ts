@@ -1,8 +1,9 @@
 import { BlendModes, Math as PhaserMath } from 'phaser';
+import type { GameObjects } from 'phaser';
 import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
 
 interface LightRay {
-  shape: import('phaser').GameObjects.Graphics;
+  shape: GameObjects.Graphics;
   baseAlpha: number;
   phase: number;
   speed: number;
