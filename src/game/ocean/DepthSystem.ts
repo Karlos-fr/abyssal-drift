@@ -1,5 +1,10 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH, WORLD_HEIGHT } from '../core/constants';
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  WATER_SURFACE_Y,
+  WORLD_HEIGHT,
+} from '../core/constants';
 
 export type DepthZone = 'safe' | 'warning' | 'pressure';
 
@@ -7,39 +12,12 @@ const WARNING_DEPTH = 0.66;
 const PRESSURE_DEPTH = 0.84;
 
 export class DepthSystem {
-  private readonly haze: Phaser.GameObjects.Rectangle;
-  private readonly colorLoss: Phaser.GameObjects.Rectangle;
   private readonly pressureVignette: Phaser.GameObjects.Graphics;
   private readonly zoneLabel: Phaser.GameObjects.Text;
   private normalizedDepth = 0;
   private currentZone: DepthZone = 'safe';
 
   public constructor(scene: Phaser.Scene) {
-    this.haze = scene.add
-      .rectangle(
-        GAME_WIDTH / 2,
-        GAME_HEIGHT / 2,
-        GAME_WIDTH,
-        GAME_HEIGHT,
-        0x00111f,
-        0,
-      )
-      .setScrollFactor(0)
-      .setDepth(5);
-
-    this.colorLoss = scene.add
-      .rectangle(
-        GAME_WIDTH / 2,
-        GAME_HEIGHT / 2,
-        GAME_WIDTH,
-        GAME_HEIGHT,
-        0x003d52,
-        0,
-      )
-      .setScrollFactor(0)
-      .setDepth(6);
-    this.colorLoss.setBlendMode(Phaser.BlendModes.MULTIPLY);
-
     this.pressureVignette = scene.add
       .graphics()
       .setScrollFactor(0)
@@ -47,7 +25,7 @@ export class DepthSystem {
       .setAlpha(0);
 
     for (let inset = 0; inset < 24; inset += 4) {
-      const alpha = (1 - inset / 24) * 0.035;
+      const alpha = (1 - inset / 24) * 0.028;
       this.pressureVignette.lineStyle(5, 0x071018, alpha);
       this.pressureVignette.strokeRect(
         inset,
@@ -89,14 +67,11 @@ export class DepthSystem {
 
   public update(worldY: number): void {
     this.normalizedDepth = Phaser.Math.Clamp(
-      (worldY - 70) / (WORLD_HEIGHT - 140),
+      (worldY - WATER_SURFACE_Y) /
+        (WORLD_HEIGHT - WATER_SURFACE_Y - 58),
       0,
       1,
     );
-
-    const eased = Phaser.Math.Easing.Sine.InOut(this.normalizedDepth);
-    this.haze.setAlpha(0.03 + eased * 0.34);
-    this.colorLoss.setAlpha(eased * 0.23);
 
     const nextZone: DepthZone =
       this.normalizedDepth >= PRESSURE_DEPTH
@@ -110,8 +85,7 @@ export class DepthSystem {
       this.updateZoneLabel();
     }
 
-    const pressure = this.pressureAmount;
-    this.pressureVignette.setAlpha(pressure * 0.9);
+    this.pressureVignette.setAlpha(this.pressureAmount * 0.78);
 
     if (this.currentZone === 'warning') {
       this.zoneLabel.setAlpha(

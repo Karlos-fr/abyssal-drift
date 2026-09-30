@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
+import { WATER_WATER_SURFACE_Y, WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
 import type { Submarine } from '../submarine/Submarine';
 import type { SubmarineMotion } from '../submarine/SubmarinePhysics';
 
@@ -24,7 +24,6 @@ interface AmbientVent {
 
 const DEFAULT_POOL_SIZE = 150;
 const MAX_HORIZONTAL_SPEED = 72;
-const SURFACE_Y = 62;
 
 export class BubbleSystem {
   private readonly pool: BubbleState[] = [];
@@ -92,8 +91,8 @@ export class BubbleSystem {
 
       // Bubbles reaching the waterline flatten, expand and fade before being
       // returned to the pool, suggesting a small surface pop without particles.
-      if (bubble.sprite.y <= SURFACE_Y) {
-        bubble.sprite.y = SURFACE_Y;
+      if (bubble.sprite.y <= WATER_SURFACE_Y) {
+        bubble.sprite.y = WATER_SURFACE_Y;
         bubble.sprite.scaleX *= 1.08;
         bubble.sprite.scaleY *= 0.72;
         bubble.sprite.alpha *= 0.72;

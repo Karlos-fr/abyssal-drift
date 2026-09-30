@@ -3,6 +3,7 @@ import { AudioSystem } from '../audio/AudioSystem';
 import {
   GAME_HEIGHT,
   SceneKey,
+  WATER_SURFACE_Y,
   WORLD_HEIGHT,
   WORLD_WIDTH,
 } from '../core/constants';
@@ -11,7 +12,6 @@ import { BubbleSystem } from '../effects/BubbleSystem';
 import { DynamicLightSystem } from '../effects/DynamicLightSystem';
 import { ImpactEffectSystem } from '../effects/ImpactEffectSystem';
 import { ParticleField } from '../effects/ParticleField';
-import { WaterPostProcessSystem } from '../effects/WaterPostProcessSystem';
 import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
@@ -20,6 +20,7 @@ import { MarineLifeSystem } from '../ocean/MarineLifeSystem';
 import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
+import { WaterCompositor } from '../water/WaterCompositor';
 
 const SHOW_DEBUG = false;
 const SHOW_DESKTOP_HELP = false;
@@ -37,7 +38,7 @@ export class OceanScene extends Phaser.Scene {
   private particles!: ParticleField;
   private impacts!: ImpactEffectSystem;
   private dynamicLight!: DynamicLightSystem;
-  private postProcess!: WaterPostProcessSystem;
+  private water!: WaterCompositor;
   private sonar!: SonarSystem;
   private cameraTarget!: Phaser.GameObjects.Zone;
   private cameraLookAhead = 0;
@@ -51,7 +52,7 @@ export class OceanScene extends Phaser.Scene {
 
   public create(): void {
     this.cameras.main.fadeIn(220, 2, 11, 22);
-    this.createOceanBackdrop();
+    this.createWorldBackdrop();
     this.ambience = new OceanAmbienceSystem(this);
     new EnvironmentArtSystem(this);
     this.marineLife = new MarineLifeSystem(this);
@@ -61,20 +62,24 @@ export class OceanScene extends Phaser.Scene {
     this.cave = new CaveSystem(this, WORLD_WIDTH, WORLD_HEIGHT);
     this.depthSystem = new DepthSystem(this);
     this.sonar = new SonarSystem(this);
-    this.submarine = new Submarine(this, 190, 170);
+    this.submarine = new Submarine(this, 190, 220);
     this.dynamicLight = new DynamicLightSystem(
       this,
       this.cave.getCollisionBlocks(),
     );
     this.bubbles = new BubbleSystem(this);
     this.impacts = new ImpactEffectSystem(this);
-    this.postProcess = new WaterPostProcessSystem(this);
     this.controls = new InputController(this);
     this.debugOverlay = new DebugOverlay(this, SHOW_DEBUG);
+    this.water = new WaterCompositor(this.game);
 
     this.input.keyboard?.once('keydown', () => this.audio.unlock());
     this.input.once('pointerdown', () => this.audio.unlock());
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.audio.dispose());
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.audio.dispose();
+      this.water.destroy();
+    });
 
     this.cameraTarget = this.add.zone(
       this.submarine.x,
@@ -172,8 +177,8 @@ export class OceanScene extends Phaser.Scene {
     this.sonar.update(delta);
     this.depthSystem.update(this.submarine.y);
     this.dynamicLight.update(this.submarine, delta, this.depthSystem.depth);
-    this.postProcess.update(delta, this.depthSystem.depth);
     this.updateCameraLookAhead(delta);
+    this.water.update(this.cameras.main, delta);
     this.debugOverlay.update(delta, this.game.loop.actualFps);
   }
 
@@ -248,21 +253,21 @@ export class OceanScene extends Phaser.Scene {
     );
   }
 
-  private createOceanBackdrop(): void {
-    this.cameras.main.setBackgroundColor('#020912');
+  private createWorldBackdrop(): void {
+    this.cameras.main.setBackgroundColor('#7fc2d9');
 
     const background = this.add.graphics().setDepth(-100);
-    const bands = 90;
+    const skyBands = 24;
 
-    for (let index = 0; index < bands; index += 1) {
-      const t = index / (bands - 1);
+    for (let index = 0; index < skyBands; index += 1) {
+      const t = index / (skyBands - 1);
       const color = Phaser.Display.Color.Interpolate.RGBWithRGB(
-        8,
-        52,
-        63,
-        1,
-        7,
-        16,
+        86,
+        160,
+        191,
+        192,
+        226,
+        232,
         1,
         t,
       );
@@ -274,27 +279,25 @@ export class OceanScene extends Phaser.Scene {
 
       background.fillRect(
         0,
-        (WORLD_HEIGHT / bands) * index,
+        (WATER_SURFACE_Y / skyBands) * index,
         WORLD_WIDTH,
-        WORLD_HEIGHT / bands + 1,
+        WATER_SURFACE_Y / skyBands + 1,
       );
     }
 
-    const haze = [
-      { x: 260, y: 190, w: 330, h: 120, a: 0.02 },
-      { x: 690, y: 370, w: 460, h: 160, a: 0.018 },
-      { x: 1_120, y: 250, w: 390, h: 140, a: 0.016 },
-      { x: 1_560, y: 480, w: 470, h: 175, a: 0.014 },
-    ];
+    background.fillStyle(0x163943, 1);
+    background.fillRect(
+      0,
+      WATER_SURFACE_Y,
+      WORLD_WIDTH,
+      WORLD_HEIGHT - WATER_SURFACE_Y,
+    );
 
-    for (const patch of haze) {
-      background.fillStyle(0x78aeb2, patch.a);
-      background.fillEllipse(
-        patch.x,
-        patch.y,
-        patch.w,
-        patch.h,
-      );
-    }
+    background.fillStyle(0xe8f4eb, 0.5);
+    background.fillCircle(1_560, 54, 24);
+
+    background.fillStyle(0xffffff, 0.18);
+    background.fillEllipse(330, 54, 150, 18);
+    background.fillEllipse(1_030, 72, 190, 22);
   }
 }

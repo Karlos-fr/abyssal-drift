@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../core/constants';
 import type { CaveBlock } from '../ocean/CaveSystem';
 import type { Submarine } from '../submarine/Submarine';
 
@@ -17,7 +16,6 @@ const BEAM_LAYERS = 14;
 export class DynamicLightSystem {
   private readonly beam: Phaser.GameObjects.Graphics;
   private readonly glow: Phaser.GameObjects.Graphics;
-  private readonly darkness: Phaser.GameObjects.Rectangle;
   private timeSeconds = 0;
   private beamAngle = 0;
   private impactDisturbance = 0;
@@ -26,19 +24,6 @@ export class DynamicLightSystem {
     scene: Phaser.Scene,
     private readonly blocks: readonly CaveBlock[],
   ) {
-    this.darkness = scene.add
-      .rectangle(
-        GAME_WIDTH / 2,
-        GAME_HEIGHT / 2,
-        GAME_WIDTH,
-        GAME_HEIGHT,
-        0x001018,
-        0.06,
-      )
-      .setScrollFactor(0)
-      .setDepth(7);
-    this.darkness.setBlendMode(Phaser.BlendModes.MULTIPLY);
-
     this.beam = scene.add.graphics().setDepth(15);
     this.glow = scene.add.graphics().setDepth(16);
     this.beam.setBlendMode(Phaser.BlendModes.ADD);
@@ -72,7 +57,6 @@ export class DynamicLightSystem {
       (0.78 + depth * 0.28) *
       (1 - Math.abs(this.impactDisturbance) * 2.2);
 
-    this.darkness.setAlpha(0.045 + depth * 0.16);
 
     this.beam.clear();
 

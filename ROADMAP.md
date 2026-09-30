@@ -398,6 +398,25 @@ Every advanced effect must be individually disableable.
 
 ---
 
+# Water rendering rewrite — platformer-25d parity
+
+- [x] Three.js compositor layered over Phaser.
+- [x] Real animated water surface with multi-sine waves.
+- [x] Exterior view above the water line.
+- [x] Automatic full-frame underwater rendering when the camera dives.
+- [x] Scene-texture refraction.
+- [x] Depth color gradient.
+- [x] Voronoi caustics.
+- [x] Procedural light rays and columns.
+- [x] Procedural underwater sparkles.
+- [x] Procedural ambient shader bubbles.
+- [x] Surface foam/highlight.
+- [x] Open-surface level layout.
+- [x] Touch-control exclusion from underwater tint.
+- [x] Removed the old fake water post-process from the active scene.
+
+---
+
 # Phase 15 — Minimal HUD
 
 Possible information:
