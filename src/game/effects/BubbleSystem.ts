@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { WATER_WATER_SURFACE_Y, WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
+import { WATER_SURFACE_Y, WORLD_HEIGHT, WORLD_WIDTH } from '../core/constants';
 import type { Submarine } from '../submarine/Submarine';
 import type { SubmarineMotion } from '../submarine/SubmarinePhysics';
 
