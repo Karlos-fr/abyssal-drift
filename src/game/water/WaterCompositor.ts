@@ -121,16 +121,16 @@ export class WaterCompositor {
       ),
     );
 
-    this.material.uniforms.u_time.value = this.timeSeconds;
-    this.material.uniforms.u_worldOrigin.value.set(
+    this.material.uniforms['u_time']!.value = this.timeSeconds;
+    this.material.uniforms['u_worldOrigin']!.value.set(
       this.worldOriginX,
       this.worldOriginY,
     );
-    this.material.uniforms.u_worldSize.value.set(
+    this.material.uniforms['u_worldSize']!.value.set(
       this.worldWidth,
       this.worldHeight,
     );
-    this.material.uniforms.u_cameraDepth.value = cameraDepth;
+    this.material.uniforms['u_cameraDepth']!.value = cameraDepth;
 
     this.syncLayout();
   }
