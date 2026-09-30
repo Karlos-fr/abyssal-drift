@@ -16,10 +16,13 @@ import { InputController } from '../input/InputController';
 import { CaveSystem } from '../ocean/CaveSystem';
 import { DepthSystem } from '../ocean/DepthSystem';
 import { EnvironmentArtSystem } from '../ocean/EnvironmentArtSystem';
-import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
 import { MarineLifeSystem } from '../ocean/MarineLifeSystem';
+import { OceanAmbienceSystem } from '../ocean/OceanAmbienceSystem';
 import { SonarSystem } from '../sonar/SonarSystem';
 import { Submarine } from '../submarine/Submarine';
+
+const SHOW_DEBUG = false;
+const SHOW_DESKTOP_HELP = false;
 
 export class OceanScene extends Phaser.Scene {
   private audio!: AudioSystem;
@@ -59,12 +62,15 @@ export class OceanScene extends Phaser.Scene {
     this.depthSystem = new DepthSystem(this);
     this.sonar = new SonarSystem(this);
     this.submarine = new Submarine(this, 190, 170);
-    this.dynamicLight = new DynamicLightSystem(this, this.cave.getCollisionBlocks());
+    this.dynamicLight = new DynamicLightSystem(
+      this,
+      this.cave.getCollisionBlocks(),
+    );
     this.bubbles = new BubbleSystem(this);
     this.impacts = new ImpactEffectSystem(this);
     this.postProcess = new WaterPostProcessSystem(this);
     this.controls = new InputController(this);
-    this.debugOverlay = new DebugOverlay(this);
+    this.debugOverlay = new DebugOverlay(this, SHOW_DEBUG);
 
     this.input.keyboard?.once('keydown', () => this.audio.unlock());
     this.input.once('pointerdown', () => this.audio.unlock());
@@ -79,15 +85,20 @@ export class OceanScene extends Phaser.Scene {
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-    camera.startFollow(this.cameraTarget, true, 0.08, 0.08);
+    camera.startFollow(this.cameraTarget, true, 0.075, 0.075);
 
-    if (!this.controls.isTouchEnabled) {
+    if (!this.controls.isTouchEnabled && SHOW_DESKTOP_HELP) {
       this.add
-        .text(8, GAME_HEIGHT - 17, 'ARROWS / ZQSD / WASD · MOVE   SPACE · SONAR', {
-          fontFamily: 'monospace',
-          fontSize: '7px',
-          color: '#76aeb7',
-        })
+        .text(
+          10,
+          GAME_HEIGHT - 20,
+          'ARROWS / ZQSD / WASD · MOVE   SPACE · SONAR',
+          {
+            fontFamily: 'monospace',
+            fontSize: '8px',
+            color: '#76aeb7',
+          },
+        )
         .setScrollFactor(0)
         .setDepth(1_000);
     }
@@ -95,12 +106,14 @@ export class OceanScene extends Phaser.Scene {
 
   public update(_time: number, delta: number): void {
     const movement = this.controls.readMovement();
+
     if (
       Math.abs(movement.vertical) > 0.35 &&
       Math.abs(this.previousVerticalInput) <= 0.35
     ) {
       this.audio.playBallast(movement.vertical);
     }
+
     this.previousVerticalInput = movement.vertical;
     this.submarine.updateFromInput(movement, delta);
 
@@ -207,23 +220,21 @@ export class OceanScene extends Phaser.Scene {
     this.previousHorizontalVelocity = velocityX;
 
     const targetLookAhead = Phaser.Math.Clamp(
-      velocityX * 0.62,
-      -46,
-      46,
+      velocityX * 0.72,
+      -62,
+      62,
     );
 
     this.cameraLookAhead = Phaser.Math.Linear(
       this.cameraLookAhead,
       targetLookAhead,
-      1 - Math.exp(-3.5 * deltaSeconds),
+      1 - Math.exp(-3.1 * deltaSeconds),
     );
 
-    // Acceleration briefly nudges framing opposite the thrust. The maximum is
-    // deliberately tiny so touch play remains comfortable.
     this.cameraThrustKick += Phaser.Math.Clamp(
-      -acceleration * deltaSeconds * 0.045,
-      -1.4,
-      1.4,
+      -acceleration * deltaSeconds * 0.035,
+      -1.2,
+      1.2,
     );
     this.cameraThrustKick = Phaser.Math.Linear(
       this.cameraThrustKick,
@@ -238,27 +249,52 @@ export class OceanScene extends Phaser.Scene {
   }
 
   private createOceanBackdrop(): void {
-    this.cameras.main.setBackgroundColor('#03111f');
+    this.cameras.main.setBackgroundColor('#020912');
 
     const background = this.add.graphics().setDepth(-100);
-    const stripeHeight = 24;
-    for (let y = 0; y < WORLD_HEIGHT; y += stripeHeight) {
-      const t = y / WORLD_HEIGHT;
+    const bands = 90;
+
+    for (let index = 0; index < bands; index += 1) {
+      const t = index / (bands - 1);
       const color = Phaser.Display.Color.Interpolate.RGBWithRGB(
         8,
+        52,
         63,
-        77,
         1,
-        8,
-        18,
+        7,
+        16,
         1,
         t,
       );
+
       background.fillStyle(
         Phaser.Display.Color.GetColor(color.r, color.g, color.b),
         1,
       );
-      background.fillRect(0, y, WORLD_WIDTH, stripeHeight + 1);
+
+      background.fillRect(
+        0,
+        (WORLD_HEIGHT / bands) * index,
+        WORLD_WIDTH,
+        WORLD_HEIGHT / bands + 1,
+      );
+    }
+
+    const haze = [
+      { x: 260, y: 190, w: 330, h: 120, a: 0.02 },
+      { x: 690, y: 370, w: 460, h: 160, a: 0.018 },
+      { x: 1_120, y: 250, w: 390, h: 140, a: 0.016 },
+      { x: 1_560, y: 480, w: 470, h: 175, a: 0.014 },
+    ];
+
+    for (const patch of haze) {
+      background.fillStyle(0x78aeb2, patch.a);
+      background.fillEllipse(
+        patch.x,
+        patch.y,
+        patch.w,
+        patch.h,
+      );
     }
   }
 }

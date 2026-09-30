@@ -1,21 +1,15 @@
 import Phaser from 'phaser';
+import { GAME_HEIGHT, GAME_WIDTH } from '../core/constants';
 import type { MovementInput } from './InputController';
 
-const JOYSTICK_X = 70;
-const JOYSTICK_Y = 205;
-const JOYSTICK_RADIUS = 38;
-const JOYSTICK_CAPTURE_RADIUS = 62;
-const SONAR_X = 410;
-const SONAR_Y = 205;
-const SONAR_RADIUS = 31;
+const JOYSTICK_X = 88;
+const JOYSTICK_Y = GAME_HEIGHT - 72;
+const JOYSTICK_RADIUS = 42;
+const JOYSTICK_CAPTURE_RADIUS = 70;
+const SONAR_X = GAME_WIDTH - 88;
+const SONAR_Y = GAME_HEIGHT - 72;
+const SONAR_RADIUS = 34;
 
-/**
- * Touch-first controls for phones and tablets.
- *
- * A single left thumb controls an analog joystick while a second pointer can
- * trigger sonar independently. The overlay is only created on touch-capable
- * devices, so desktop controls stay visually clean.
- */
 export class TouchControls {
   private readonly enabled: boolean;
   private readonly base: Phaser.GameObjects.Arc | null;
@@ -38,9 +32,9 @@ export class TouchControls {
       SONAR_Y,
     );
 
-    if (sonarDistance <= SONAR_RADIUS + 14) {
+    if (sonarDistance <= SONAR_RADIUS + 16) {
       this.sonarQueued = true;
-      this.sonarButton?.setScale(0.92).setAlpha(0.52);
+      this.sonarButton?.setScale(0.94).setAlpha(0.48);
       return;
     }
 
@@ -79,12 +73,11 @@ export class TouchControls {
       this.knob?.setPosition(JOYSTICK_X, JOYSTICK_Y);
     }
 
-    this.sonarButton?.setScale(1).setAlpha(0.34);
+    this.sonarButton?.setScale(1).setAlpha(0.28);
   };
 
   public constructor(private readonly scene: Phaser.Scene) {
-    this.enabled =
-      navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+    this.enabled = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
 
     if (!this.enabled) {
       this.base = null;
@@ -94,39 +87,37 @@ export class TouchControls {
       return;
     }
 
-    // Phaser creates one touch pointer by default. Two extra pointers make
-    // joystick + sonar + an incidental third touch safe on mobile.
     scene.input.addPointer(2);
 
     this.base = scene.add
-      .circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS, 0x07151e, 0.26)
-      .setStrokeStyle(2, 0xa8eaf0, 0.34)
+      .circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS, 0x06141b, 0.2)
+      .setStrokeStyle(2, 0xb5eef1, 0.28)
       .setScrollFactor(0)
       .setDepth(2_000);
 
     scene.add
-      .circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS - 10, 0x000000, 0)
-      .setStrokeStyle(1, 0xa8eaf0, 0.12)
+      .circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS - 11, 0x000000, 0)
+      .setStrokeStyle(1, 0xb5eef1, 0.08)
       .setScrollFactor(0)
       .setDepth(2_000);
 
     this.knob = scene.add
-      .circle(JOYSTICK_X, JOYSTICK_Y, 14, 0x9cecf2, 0.28)
-      .setStrokeStyle(1, 0xe8ffff, 0.45)
+      .circle(JOYSTICK_X, JOYSTICK_Y, 15, 0xa7edf0, 0.22)
+      .setStrokeStyle(1, 0xe8ffff, 0.36)
       .setScrollFactor(0)
       .setDepth(2_001);
 
     this.sonarButton = scene.add
-      .circle(SONAR_X, SONAR_Y, SONAR_RADIUS, 0x0b3340, 0.34)
-      .setStrokeStyle(2, 0x82f5ed, 0.5)
+      .circle(SONAR_X, SONAR_Y, SONAR_RADIUS, 0x092e38, 0.28)
+      .setStrokeStyle(2, 0x82f5ed, 0.42)
       .setScrollFactor(0)
       .setDepth(2_000);
 
     this.sonarLabel = scene.add
       .text(SONAR_X, SONAR_Y, 'SONAR', {
         fontFamily: 'monospace',
-        fontSize: '8px',
-        color: '#c8fffb',
+        fontSize: '9px',
+        color: '#d5fffb',
       })
       .setOrigin(0.5)
       .setScrollFactor(0)
@@ -174,10 +165,8 @@ export class TouchControls {
     const normalizedY = clampedY / JOYSTICK_RADIUS;
 
     this.movement = {
-      horizontal:
-        Math.abs(normalizedX) < deadZone ? 0 : normalizedX,
-      vertical:
-        Math.abs(normalizedY) < deadZone ? 0 : normalizedY,
+      horizontal: Math.abs(normalizedX) < deadZone ? 0 : normalizedX,
+      vertical: Math.abs(normalizedY) < deadZone ? 0 : normalizedY,
     };
   }
 

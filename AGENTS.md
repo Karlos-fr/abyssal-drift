@@ -2,12 +2,12 @@
 
 ## Project goal
 
-Build a small, polished 2D side-view submarine exploration game in TypeScript and Phaser. Retro readability comes from low-resolution shapes and pixel-oriented art; modern polish comes from transparency, lighting, particles, sonar, water distortion and responsive audio.
+Build a small, polished 2D side-view submarine exploration game in TypeScript and Phaser. Retro readability comes from crisp pixel-oriented art and restrained low-resolution shapes; modern polish comes from transparency, lighting, particles, sonar, atmospheric depth and responsive audio.
 
 ## Working rules
 
 - Work directly on the existing branch unless the user explicitly asks for a branch.
-- Keep the logical game resolution at **480 × 270** unless a deliberate design change is documented.
+- Keep the logical game resolution at **640 × 360** unless a deliberate design change is documented.
 - Keep gameplay logic separate from presentation/effects.
 - Prefer small, composable systems over large scene classes.
 - Do not add major content systems before the first movement/game-feel milestone is validated.
@@ -18,6 +18,7 @@ Build a small, polished 2D side-view submarine exploration game in TypeScript an
 - Add comments for non-obvious design intent, not line-by-line narration.
 - Do not commit generated dist/ or node_modules/ directories.
 - When a ROADMAP.md task becomes genuinely complete, check it off in the same commit (or the immediately following documentation commit). Never mark aspirational or partially implemented work as complete.
+- Prefer crisp rendering over forced full-screen stretching. Let Phaser own canvas sizing.
 
 ## Validation before marking a roadmap task complete
 

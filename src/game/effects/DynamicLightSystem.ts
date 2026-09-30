@@ -8,10 +8,11 @@ interface Point {
   y: number;
 }
 
-const MAX_DISTANCE = 260;
-const HALF_ANGLE = Phaser.Math.DegToRad(25);
-const RAY_COUNT = 45;
+const MAX_DISTANCE = 225;
+const HALF_ANGLE = Phaser.Math.DegToRad(15);
+const RAY_COUNT = 72;
 const RAY_STEP = 3;
+const BEAM_LAYERS = 14;
 
 export class DynamicLightSystem {
   private readonly beam: Phaser.GameObjects.Graphics;
@@ -32,7 +33,7 @@ export class DynamicLightSystem {
         GAME_WIDTH,
         GAME_HEIGHT,
         0x001018,
-        0.08,
+        0.06,
       )
       .setScrollFactor(0)
       .setDepth(7);
@@ -48,17 +49,15 @@ export class DynamicLightSystem {
     const deltaSeconds = Math.min(deltaMs / 1_000, 1 / 20);
     this.timeSeconds += deltaSeconds;
 
-    // The lamp direction has a little inertia. This makes the beam feel like
-    // light mounted on a heavy vehicle rather than geometry welded to a sprite.
-    const angleBlend = 1 - Math.exp(-5.2 * deltaSeconds);
     this.beamAngle = Phaser.Math.Angle.RotateTo(
       this.beamAngle,
       submarine.rotation,
-      angleBlend * 0.18,
+      (1 - Math.exp(-5 * deltaSeconds)) * 0.18,
     );
 
-    const originX = submarine.x + Math.cos(submarine.rotation) * 17;
-    const originY = submarine.y + Math.sin(submarine.rotation) * 17 - 1;
+    const originX = submarine.x + Math.cos(submarine.rotation) * 18;
+    const originY = submarine.y + Math.sin(submarine.rotation) * 18 - 1;
+
     this.impactDisturbance = Phaser.Math.Linear(
       this.impactDisturbance,
       0,
@@ -66,62 +65,66 @@ export class DynamicLightSystem {
     );
 
     const drift =
-      Math.sin(this.timeSeconds * 0.8) * 0.012 +
+      Math.sin(this.timeSeconds * 0.72) * 0.006 +
       Math.sin(this.timeSeconds * 39) * this.impactDisturbance;
     const centerAngle = this.beamAngle + drift;
     const depthBoost =
-      (0.75 + depth * 0.35) * (1 - Math.abs(this.impactDisturbance) * 2.5);
+      (0.78 + depth * 0.28) *
+      (1 - Math.abs(this.impactDisturbance) * 2.2);
 
-    this.darkness.setAlpha(0.06 + depth * 0.18);
-
-    const outer = this.castFan(
-      originX,
-      originY,
-      centerAngle,
-      HALF_ANGLE,
-      MAX_DISTANCE,
-    );
-    const middle = this.castFan(
-      originX,
-      originY,
-      centerAngle,
-      HALF_ANGLE * 0.68,
-      MAX_DISTANCE * 0.88,
-    );
-    const core = this.castFan(
-      originX,
-      originY,
-      centerAngle,
-      HALF_ANGLE * 0.36,
-      MAX_DISTANCE * 0.72,
-    );
+    this.darkness.setAlpha(0.045 + depth * 0.16);
 
     this.beam.clear();
-    this.drawFan(this.beam, originX, originY, outer, 0xb7f8ff, 0.03 * depthBoost);
-    this.drawFan(this.beam, originX, originY, middle, 0xc9fbff, 0.055 * depthBoost);
-    this.drawFan(this.beam, originX, originY, core, 0xe6ffff, 0.095 * depthBoost);
+
+    for (let index = BEAM_LAYERS - 1; index >= 0; index -= 1) {
+      const t = index / (BEAM_LAYERS - 1);
+      const distance = Phaser.Math.Linear(MAX_DISTANCE * 0.28, MAX_DISTANCE, t);
+      const halfAngle = Phaser.Math.Linear(HALF_ANGLE * 0.28, HALF_ANGLE, t);
+      const alpha =
+        Phaser.Math.Linear(0.052, 0.0045, t) *
+        depthBoost *
+        (1 - t * 0.15);
+
+      const fan = this.castFan(
+        originX,
+        originY,
+        centerAngle,
+        halfAngle,
+        distance,
+      );
+
+      this.drawFan(
+        this.beam,
+        originX,
+        originY,
+        fan,
+        0xe7fbff,
+        alpha,
+      );
+    }
 
     this.glow.clear();
     const flicker =
-      Math.sin(this.timeSeconds * 13.1) * 0.04 +
-      Math.sin(this.timeSeconds * 23.7) * 0.018;
-    this.glow.fillStyle(0xe9ffff, (0.14 + flicker) * depthBoost);
-    this.glow.fillCircle(originX, originY, 7.5);
-    this.glow.fillStyle(0xbdfaff, (0.05 + flicker * 0.3) * depthBoost);
-    this.glow.fillCircle(originX, originY, 13);
+      Math.sin(this.timeSeconds * 9.4) * 0.012 +
+      Math.sin(this.timeSeconds * 19.1) * 0.006;
+
+    this.glow.fillStyle(0xf5ffff, (0.08 + flicker) * depthBoost);
+    this.glow.fillCircle(originX, originY, 4.5);
+    this.glow.fillStyle(0xcff7fb, (0.026 + flicker * 0.2) * depthBoost);
+    this.glow.fillCircle(originX, originY, 9);
   }
 
   public triggerImpact(strength: number): void {
     const normalized = Phaser.Math.Clamp(strength, 0, 1);
     this.impactDisturbance = Math.max(
       this.impactDisturbance,
-      0.012 + normalized * 0.04,
+      0.01 + normalized * 0.035,
     );
   }
 
   public getLightAmountAt(x: number, y: number, submarine: Submarine): number {
-    const originX = submarine.x + Math.cos(submarine.rotation) * 17;
-    const originY = submarine.y + Math.sin(submarine.rotation) * 17 - 1;
+    const originX = submarine.x + Math.cos(submarine.rotation) * 18;
+    const originY = submarine.y + Math.sin(submarine.rotation) * 18 - 1;
     const dx = x - originX;
     const dy = y - originY;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -142,7 +145,11 @@ export class DynamicLightSystem {
 
     const angular = 1 - angleDelta / HALF_ANGLE;
     const distanceFade = 1 - distance / MAX_DISTANCE;
-    return Phaser.Math.Clamp(angular * 0.65 + distanceFade * 0.35, 0, 1);
+    return Phaser.Math.Clamp(
+      angular * angular * 0.7 + distanceFade * distanceFade * 0.3,
+      0,
+      1,
+    );
   }
 
   private castFan(

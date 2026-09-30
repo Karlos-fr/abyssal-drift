@@ -32,7 +32,7 @@ export class Submarine extends Phaser.GameObjects.Container {
     // can be clipped against cave geometry. Only the physical lamp belongs to
     // the submarine container.
     const headlightHalo = scene.add
-      .circle(17, -1, 5, 0xd8fdff, 0.11);
+      .circle(17, -1, 5, 0xd8fdff, 0.07);
     headlightHalo.setBlendMode(Phaser.BlendModes.ADD);
 
     const shadow = scene.add.ellipse(1, 3, 35, 13, 0x101718, 0.35);

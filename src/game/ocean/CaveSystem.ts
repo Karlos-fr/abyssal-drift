@@ -14,13 +14,6 @@ export interface CaveBlock {
   height: number;
 }
 
-/**
- * A deliberately simple block-based cave.
- *
- * Collision geometry is kept independent from the decorative ridges so the
- * first milestone stays deterministic and easy to tune. Later art can replace
- * the blocks without rewriting collision handling.
- */
 export class CaveSystem {
   private readonly blocks: CaveBlock[];
 
@@ -48,7 +41,6 @@ export class CaveSystem {
     let hitHorizontal = false;
     let hitVertical = false;
 
-    // A few passes safely resolve corners where two cave blocks meet.
     for (let pass = 0; pass < 3; pass += 1) {
       let changed = false;
 
@@ -106,59 +98,71 @@ export class CaveSystem {
     const floor = 58;
 
     return [
-      // World shell.
       { x: 0, y: 0, width: worldWidth, height: ceiling },
       { x: 0, y: worldHeight - floor, width: worldWidth, height: floor },
       { x: 0, y: 0, width: edge, height: worldHeight },
       { x: worldWidth - edge, y: 0, width: edge, height: worldHeight },
-
-      // A first ceiling shelf forces the player to dive.
       { x: 320, y: ceiling, width: 220, height: 190 },
-
-      // A narrower tunnel introduces controlled precision.
       { x: 620, y: ceiling, width: 210, height: 270 },
       { x: 620, y: 520, width: 210, height: worldHeight - 520 },
-
-      // The middle is an open chamber with one isolated rock.
       { x: 1_080, y: 370, width: 92, height: 98 },
-
-      // A raised seabed asks the player to climb again.
       { x: 1_250, y: 505, width: 235, height: worldHeight - 505 },
-
-      // Final mixed-depth passage.
       { x: 1_520, y: ceiling, width: 190, height: 245 },
       { x: 1_520, y: 625, width: 190, height: worldHeight - 625 },
-
-      // A last obstacle before the far wall.
       { x: 1_760, y: 305, width: 72, height: 180 },
     ];
   }
 
   private draw(scene: Phaser.Scene): void {
     const rock = scene.add.graphics().setDepth(-10);
-    rock.fillStyle(0x071218, 1);
+    rock.fillStyle(0x061116, 1);
 
     for (const block of this.blocks) {
       rock.fillRect(block.x, block.y, block.width, block.height);
     }
 
-    // Small ridges break the rectangular silhouette while collision remains
-    // simple and predictable.
-    rock.fillStyle(0x0b2026, 1);
-    for (const block of this.blocks) {
-      if (block.width < 90) {
-        continue;
-      }
+    // Break the silhouette with small pixel chunks instead of repeating
+    // triangular teeth. Collision geometry stays clean and predictable.
+    rock.fillStyle(0x0d252c, 0.55);
 
-      const ridgeY = block.y === 0 ? block.height : block.y;
-      for (let x = block.x + 8; x < block.x + block.width - 10; x += 34) {
-        const pointsUp = block.y > 100;
-        if (pointsUp) {
-          rock.fillTriangle(x, ridgeY, x + 12, ridgeY - 10, x + 25, ridgeY);
-        } else {
-          rock.fillTriangle(x, ridgeY, x + 12, ridgeY + 10, x + 25, ridgeY);
+    for (const block of this.blocks) {
+      const horizontal = block.width >= block.height;
+
+      if (horizontal) {
+        const edgeY =
+          block.y < 100 ? block.y + block.height : block.y;
+
+        for (
+          let x = block.x + 14, index = 0;
+          x < block.x + block.width - 14;
+          x += 30, index += 1
+        ) {
+          const width = 10 + (index % 3) * 4;
+          const height = 2 + ((index * 5) % 5);
+          rock.fillRect(
+            x,
+            block.y < 100 ? edgeY : edgeY - height,
+            width,
+            height,
+          );
+        }
+      } else {
+        for (
+          let y = block.y + 18, index = 0;
+          y < block.y + block.height - 18;
+          y += 34, index += 1
+        ) {
+          const width = 2 + ((index * 3) % 4);
+          const height = 10 + (index % 3) * 3;
+          rock.fillRect(block.x - width, y, width, height);
+          rock.fillRect(block.x + block.width, y + 8, width, height);
         }
       }
+    }
+
+    rock.fillStyle(0x16363d, 0.18);
+    for (let x = 80; x < 1_850; x += 97) {
+      rock.fillRect(x, 846 - ((x / 97) % 3) * 3, 15, 2);
     }
   }
 }

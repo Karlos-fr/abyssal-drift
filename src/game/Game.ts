@@ -10,16 +10,15 @@ export function createGame(): Phaser.Game {
     parent: 'game-root',
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-    backgroundColor: '#03111f',
+    backgroundColor: '#020912',
     pixelArt: true,
     roundPixels: true,
     render: {
       antialias: false,
     },
     scale: {
-      // EXPAND fills the browser viewport while keeping the logical game
-      // coordinates at 480x270. The camera gains a little extra visible area
-      // on non-16:9 screens instead of letterboxing the game.
+      // EXPAND lets the game occupy the whole viewport while Phaser controls
+      // the canvas dimensions. CSS no longer stretches the backing buffer.
       mode: Phaser.Scale.EXPAND,
       autoCenter: Phaser.Scale.CENTER_BOTH,
       width: GAME_WIDTH,

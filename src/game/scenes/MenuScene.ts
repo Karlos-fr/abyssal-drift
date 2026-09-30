@@ -9,20 +9,39 @@ export class MenuScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.cameras.main.setBackgroundColor('#03111f');
+    this.cameras.main.setBackgroundColor('#020912');
 
     const backdrop = this.add.graphics();
-    for (let y = 0; y < GAME_HEIGHT; y += 6) {
-      const t = y / GAME_HEIGHT;
-      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(8, 55, 72, 2, 11, 22, 1, t);
-      backdrop.fillStyle(Phaser.Display.Color.GetColor(color.r, color.g, color.b), 1);
-      backdrop.fillRect(0, y, GAME_WIDTH, 6);
+    const bands = 48;
+    for (let index = 0; index < bands; index += 1) {
+      const t = index / (bands - 1);
+      const color = Phaser.Display.Color.Interpolate.RGBWithRGB(
+        8,
+        48,
+        60,
+        1,
+        8,
+        18,
+        1,
+        t,
+      );
+
+      backdrop.fillStyle(
+        Phaser.Display.Color.GetColor(color.r, color.g, color.b),
+        1,
+      );
+      backdrop.fillRect(
+        0,
+        (GAME_HEIGHT / bands) * index,
+        GAME_WIDTH,
+        GAME_HEIGHT / bands + 1,
+      );
     }
 
     this.add
-      .text(GAME_WIDTH / 2, 86, 'ABYSSAL DRIFT', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.31, 'ABYSSAL DRIFT', {
         fontFamily: 'monospace',
-        fontSize: '24px',
+        fontSize: '30px',
         color: '#d7fbff',
         stroke: '#0c3e50',
         strokeThickness: 3,
@@ -30,17 +49,17 @@ export class MenuScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(GAME_WIDTH / 2, 126, 'retro submarine exploration', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.44, 'retro submarine exploration', {
         fontFamily: 'monospace',
-        fontSize: '8px',
+        fontSize: '10px',
         color: '#72b8c4',
       })
       .setOrigin(0.5);
 
     const prompt = this.add
-      .text(GAME_WIDTH / 2, 190, 'ENTER / SPACE / TAP TO DIVE', {
+      .text(GAME_WIDTH / 2, GAME_HEIGHT * 0.7, 'ENTER / SPACE / TAP TO DIVE', {
         fontFamily: 'monospace',
-        fontSize: '10px',
+        fontSize: '12px',
         color: '#b8edf4',
       })
       .setOrigin(0.5);

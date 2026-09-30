@@ -24,7 +24,7 @@ Create a reliable, lightweight development base.
 - [x] Add .gitignore.
 - [x] Expand README.
 - [x] Add AGENTS.md.
-- [x] Set logical resolution to 480 × 270.
+- [x] Set logical resolution to 640 × 360.
 - [x] Add responsive upscale.
 - [x] Use Phaser WebGL/automatic renderer with browser fallback.
 - [ ] Verify desktop.
@@ -32,7 +32,7 @@ Create a reliable, lightweight development base.
 - [x] Display a first test scene.
 
 ## Done when
-npm install + npm run dev launches a 480 × 270 Phaser scene that scales cleanly.
+npm install + npm run dev launches a crisp 640 × 360 Phaser scene that scales cleanly.
 
 ---
 

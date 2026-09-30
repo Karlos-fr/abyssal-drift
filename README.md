@@ -1,10 +1,10 @@
 # Abyssal Drift
 
-A polished 2D submarine exploration game built with TypeScript and Phaser, blending retro pixel art with modern underwater effects, lighting, particles, sonar, and juicy game feel.
+A polished 2D submarine exploration game built with TypeScript and Phaser, blending crisp retro visuals with modern underwater lighting, particles, sonar and juicy game feel.
 
 ## Status
 
-Early playable prototype. The current milestone focuses on making basic submarine movement feel good before adding content-heavy systems.
+Playable prototype under active visual and gameplay refinement.
 
 See [ROADMAP.md](./ROADMAP.md) for the implementation plan.
 
@@ -25,7 +25,6 @@ Production checks:
 
     npm run typecheck
     npm run lint
-    npm run format:check
     npm run build
 
 ## Current controls
@@ -33,21 +32,21 @@ Production checks:
 - Arrow keys: move
 - AZERTY: ZQSD
 - QWERTY: WASD
+- Space: sonar
+- Touch: analog joystick + SONAR button
 
 ## Current prototype
 
-The repository already contains:
+The repository includes:
 
-- responsive 480×270 Phaser setup;
+- responsive 640×360 Phaser setup;
+- crisp pixel-oriented rendering without CSS canvas stretching;
 - Boot → Menu → Ocean scene flow;
-- procedural placeholder ocean;
-- procedural placeholder submarine;
-- custom inertial movement and light buoyancy;
-- soft camera follow;
-- FPS debug overlay.
-
-Final art, sonar, bubbles and cave collisions intentionally come after the movement baseline.
-
+- inertial submarine movement and buoyancy;
+- dynamic occluded headlight;
+- sonar, bubbles, particles and marine life;
+- depth/pressure feedback and procedural audio;
+- iPhone landscape touch controls.
 
 ## Play
 
@@ -55,4 +54,4 @@ The latest build is deployed automatically to GitHub Pages:
 
 https://karlos-fr.github.io/abyssal-drift/
 
-On touch devices, use the analog joystick on the left and the SONAR button on the right. Landscape orientation is recommended on iPhone.
+Landscape orientation is recommended on iPhone.
